@@ -1,0 +1,21 @@
+.container {
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 4px;
+    border-left: 2px solid #3AA796;
+    margin-bottom: 35px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: .9px;
+    margin-bottom: 35px;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}

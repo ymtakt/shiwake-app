@@ -1,0 +1,46 @@
+.table {
+
+  table {
+    thead {
+      tr {
+        background-color: #EEEAEA;
+
+        th {
+          padding-top: 10px;
+          padding-bottom: 4px;
+          font-size: 12px;
+        }
+
+        .table_first {
+          padding-left: 4px;
+        }
+
+        .table_last {
+          width: 85px;
+          padding-right: 4px;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        font-size: 14px;
+
+        td {
+          padding-top: 20px;
+          padding-bottom: 6px;
+        }
+
+        .table_first {
+          font-size: 12px;
+          padding-left: 4px;
+        }
+
+        .table_last {
+          width: 85px;
+          padding-right: 4px;
+        }
+      }
+    }
+  }
+}

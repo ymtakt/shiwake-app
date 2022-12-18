@@ -8,12 +8,14 @@
   font-size: 15px;
   font-weight: 600;
   margin-right: 20px;
+  cursor: pointer;
 }
 
 .next {
   font-size: 15px;
   font-weight: 600;
   margin-left: 20px;
+  cursor: pointer;
 }
 
 .list {
@@ -24,6 +26,7 @@
 
   li {
     margin-right: 15px;
+    cursor: pointer;
 
     &:last-of-type {
       margin-right: 0;
@@ -61,6 +64,7 @@
         td {
           padding-top: 20px;
           padding-bottom: 6px;
+          text-align: right;
         }
 
         .table_first {

@@ -1,22 +1,27 @@
 import { NextPage } from "next/types";
-import { ChangeEventHandler, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Box, Input, Stack, Button, InputGroup, InputRightElement, Image } from '@chakra-ui/react'
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useRouter } from "next/router";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { app } from '../src/firebase';
 import { LayoutAuth } from "../src/components/LayoutAuth";
 
+
 const Signup: NextPage = () => {
+
 
   //ユーザー登録情報State
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [photoURL, setPhotoURL] = useState<any>("");
-  // const [image, setImage] = useState()
+  const [src, setSrc] = useState('profire-default.svg');
+  const [photoURL, setPhotoURL] = useState<File | null>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   //認証用
   const auth = getAuth();
@@ -31,6 +36,9 @@ const Signup: NextPage = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
+  //データベース接続
+  const db = getFirestore(app);
+
 
   //入力値
   const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,9 +50,19 @@ const Signup: NextPage = () => {
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   }
-  const handleChangePhotoURL = (e: { target: { files: SetStateAction<string>[]; }; }) => {
-    setPhotoURL(e.target.files[0]);
+  const handleChangePhotoURL = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files !== null) {
+      const fileObject = e.target.files[0];
+      setPhotoURL(fileObject)
+      setSrc(window.URL.createObjectURL(fileObject));
+      // console.log(e.target.files[0].name)
+    }
+    // setPhotoURL(e.target.files[0].name);
   }
+
+  const onButtonClick = () => {
+    inputRef.current?.click();
+  };
 
 
   //アカウント作成イベント
@@ -52,8 +70,13 @@ const Signup: NextPage = () => {
     const authUser = createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         //サインイン後の処理
-        let url: any = "";
+        // let url: any = "";
         const user = userCredential.user;
+        updateProfile(auth.currentUser as any, {
+          displayName: displayName,
+        })
+
+        const uid = user.uid
 
         if (photoURL) {
           const S =
@@ -64,29 +87,31 @@ const Signup: NextPage = () => {
             .join("");
           const fileName = randomChar + "_" + photoURL.name;
 
-          const storage = getStorage();
           const mountainsRef = ref(storage, `avatars/${fileName}`);
-          uploadBytes(mountainsRef, photoURL).then(() => {
-            // console.log('Uploaded a blob or file!');
+          uploadBytes(mountainsRef, photoURL).then((url) => {
+            console.log(url);
+            getDownloadURL(mountainsRef).then(url => {
+              setDoc(doc(db, "users", uid), {
+                displayName: displayName,
+                name: 'user',
+                photoURL: url,
+                uid
+              });
+            })
           });
-
-
-          url = getDownloadURL(ref(storage, `avatars/${fileName}`));
-
         }
 
-        updateProfile(auth.currentUser as any, {
-          displayName: displayName,
-          photoURL: url
-        })
-        router.push("/mypage")
       })
+
     setDisplayName("");
     setEmail("");
     setPassword("");
+
+    router.push("/mypage")
   }
 
   //ページリロード時にログイン状態を監視、リダイレクト
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -108,12 +133,23 @@ const Signup: NextPage = () => {
               <Stack marginBottom='45px' spacing='20px'>
                 <Box>
                   {/* <Box ref={fileName}></Box> */}
-                  {/* <Image src={photoURL} alt="" display='block' w='85px' h='auto' marginBottom='25px' /> */}
+                  <Image src={src} alt="" display='block' w='85px' h='85px' borderRadius='50%' m='0 auto 25px' objectFit='cover' />
                   <Input
-                    type='file'
+                    id="image"
+                    ref={inputRef}
+                    hidden
+                    multiple
+                    type="file"
                     accept="image/*"
                     onChange={handleChangePhotoURL}
                   />
+                  <Button
+                    onClick={onButtonClick}
+                    w='330px'
+                    borderColor='#AAE2CF'
+                  >
+                    ファイルを選択
+                  </Button>
                 </Box>
                 <Input
                   type='text'

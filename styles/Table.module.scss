@@ -1,4 +1,6 @@
 .table {
+  white-space: inherit;
+  overflow-x: auto;
 
   table {
     thead {
@@ -38,6 +40,11 @@
 
         .table_last {
           width: 85px;
+          padding-right: 4px;
+        }
+
+        .table_last_list {
+          width: 12%;
           padding-right: 4px;
         }
       }

@@ -43,7 +43,8 @@ export const useAuth = () => {
     return onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
-  }, [setUser]);
+    // }, [setUser]);
+  }, []);
 
   return user;
 };

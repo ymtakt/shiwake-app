@@ -50,28 +50,28 @@ const Report: NextPage = () => {
     const nextYear = addYears(nowYear, 1);
     setNowYear(nextYear)
   }
-  const onClickMonth = (e) => {
+  const onClickMonth = (e: number) => {
     setNowMonth(e)
   }
 
 
   //収入配列
-  const positiveNum = detailsMonth.filter((n) => {
+  const positiveNum = detailsMonth.filter((n: { type: string; }) => {
     const positiveNumber = n.type === '収入';
     return positiveNumber;
   });
   //支出配列
-  const negativeNum = detailsMonth.filter((n) => {
+  const negativeNum = detailsMonth.filter((n: { type: string; }) => {
     const negativeNumber = n.type === '支出';
     return negativeNumber;
   });
 
-  const plus = positiveNum.reduce((sum, X) => {
+  const plus = positiveNum.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minus = negativeNum.reduce((sum, X) => {
+  const minus = negativeNum.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
@@ -164,11 +164,14 @@ const Report: NextPage = () => {
               <Pie data={data} />
             </Box>
             <Box w='50%' className={report.table_month}>
-              <TableContainer>
+              <Box>
+                収入
+              </Box>
+              <TableContainer className={report.box}>
                 <Table variant='simple'>
                   <Thead>
                     <Tr>
-                      <Th>登録内容</Th>
+                      <Th>会社名</Th>
                       <Th>金額</Th>
                     </Tr>
                   </Thead>
@@ -178,19 +181,47 @@ const Report: NextPage = () => {
                       detailsMonth.map((detail: any) => {
                         return (
                           user !== null && (
-                            <Tr key={detail.id}>
-                              <Td >{detail.accountDebit}</Td>
-                              {
-                                detail.type === '収入' && (
-                                  <Td>+{detail.price}</Td>
-                                )
-                              }
-                              {
-                                detail.type === '支出' && (
-                                  <Td>-{detail.price}</Td>
-                                )
-                              }
-                            </Tr>
+                            detail.type === '収入' && (
+                              <Tr className={report.tr_color} key={detail.id}>
+                                <Td >{detail.client}</Td>
+                                <Td>+{detail.price}円</Td>
+                              </Tr>
+                            )
+                          )
+                        )
+                      })
+                    }
+                    {/* :
+                      <Text>ありません</Text>
+                    } */}
+                  </Tbody>
+
+                </Table>
+              </TableContainer>
+
+              <Box>
+                支出
+              </Box>
+              <TableContainer>
+                <Table variant='simple'>
+                  <Thead>
+                    <Tr>
+                      <Th>科目</Th>
+                      <Th>金額</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {/* {details ? */}
+                    {
+                      detailsMonth.map((detail: any) => {
+                        return (
+                          user !== null && (
+                            detail.type === '支出' && (
+                              <Tr className={report.tr_color} key={detail.id}>
+                                <Td >{detail.accountDebit}</Td>
+                                <Td>-{detail.price}円</Td>
+                              </Tr>
+                            )
                           )
                         )
                       })

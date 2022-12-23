@@ -1,4 +1,6 @@
 .container {
+  margin-bottom: 35px;
+
   h2 {
     font-size: 20px;
     font-weight: 600;
@@ -16,6 +18,8 @@
   }
 
   img {
+    width: auto;
     max-width: 100%;
+    margin-bottom: 25px;
   }
 }

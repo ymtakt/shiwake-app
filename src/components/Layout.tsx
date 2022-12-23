@@ -18,7 +18,7 @@ export const Layout: FC<Props> = ({ children }) => {
         <Flex>
           <Sidebar />
           <Box position='relative' left='135px' w='calc(100% - 135px)' minH='85vh' top='65px' backgroundColor='#F5F5F5'>
-            <Box p='55px 75px' maxW='1200' m=' 0 auto'>
+            <Box p='55px 35px' maxW='1200' m=' 0 auto'>
               {children}
             </Box>
           </Box>

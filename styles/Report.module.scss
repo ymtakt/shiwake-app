@@ -91,6 +91,7 @@
           padding-top: 10px;
           padding-bottom: 4px;
           font-size: 12px;
+          border: 1px solid #ddd;
         }
 
         .table_first {
@@ -111,6 +112,7 @@
         td {
           padding-top: 20px;
           padding-bottom: 6px;
+          border: 1px solid #ddd;
         }
 
         .table_first {
@@ -125,4 +127,17 @@
       }
     }
   }
+}
+
+.tr_color:nth-child(2n +1) {
+  background-color: #fff;
+}
+
+.tr_color:nth-child(2n) {
+  background-color: #e6f8ef;
+}
+
+
+.box {
+  margin-bottom: 45px
 }

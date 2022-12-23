@@ -12,16 +12,99 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <span className={styles.logo}>
+      <header className={`${styles['l-header']}`}>
+        <div className={`${styles['l-header_wrap']}`}>
+          <div className={`${styles['l-header_left']}`}>
+            <h1>
+              <img src="" alt="" />
+            </h1>
+          </div>
+          <div className={`${styles['l-header_right']}`}>
+            <nav className={`${styles['l-header_nav']}`}>
+              <div className="">
+                <a href="">ログイン</a>
+              </div>
+              <div className="">
+                <a href="">新規登録</a>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <div className={`${styles['fv']}`}>
+        <div className={`${styles['fv_ttl']}`}>
+          <h2>簡単仕訳けアプリ</h2>
+          <h2>日々の収支管理は<span>Shiwake</span></h2>
           <Image src="/logo.png" alt="Vercel Logo" width={150} height={66} />
-        </span>
-        <h1 className={styles.title}>
-          簡単仕訳けアプリ
-        </h1>
-        <div>
+          <p className="">SHIWAKEが超シンプルに日々の入出金を管理できるサービスです。</p>
+        </div>
+        <div className={`${styles['fv_link']}`}>
+          <a href="">
+            新規登録はこちら
+          </a>
           <Link href={'/login'} >ログイン</Link>
         </div>
+        <div className={`${styles['fv_img']}`}>
+          <img src="" alt="" />
+        </div>
+      </div>
+
+      <main className={`${styles.main} ${styles['p-home']}`}>
+        <section className={`${styles['p-about']}`}>
+          <div className={`${styles['p-about_wrap']}`}>
+            <div className={`${styles['p-about_img']}`}>
+              <img src="" alt="" />
+            </div>
+            <div className={`${styles['p-about_txt']}`}>
+              <h2></h2>
+              <p></p>
+            </div>
+          </div>
+        </section>
+
+        <section className={`${styles['p-point']}`}>
+          <div className={`${styles['p-point_wrap']}`}>
+            <div className={`${styles['p-point_ttl']}`}>
+              <h2></h2>
+              <span></span>
+            </div>
+            <div className={`${styles['p-point_flex']}`}>
+
+              <div className={`${styles['p-point_card']}`}>
+                <img src="" alt="" />
+                <h3></h3>
+                <p className=""></p>
+              </div>
+
+              <div className={`${styles['p-point_card']}`}>
+                <img src="" alt="" />
+                <h3></h3>
+                <p className=""></p>
+              </div>
+
+              <div className={`${styles['p-point_card']}`}>
+                <img src="" alt="" />
+                <h3></h3>
+                <p className=""></p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <section className={`${styles['p-faq']}`}>
+          <div className={`${styles['p-faq_wrap']}`}>
+            <div className={`${styles['p-faq_ttl']}`}>
+              <h2></h2>
+              <span></span>
+            </div>
+            <div className={`${styles['p-faq_content']}`}>
+
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <footer className={styles.footer}>

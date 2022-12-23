@@ -56,217 +56,217 @@ const Year: NextPage = () => {
 
 
   //収入配列
-  const incomeNum = detailsYear.filter((n) => {
-    return n.type === '収入' && n.year === year;
+  const incomeNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
+    return n.type === '収入' && n.year === year && n.pl === 'true';
   });
   //支出配列
-  const spendingNum = detailsYear.filter((n) => {
-    return n.type === '支出' && n.year === year;
+  const spendingNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
+    return n.type === '支出' && n.year === year && n.pl === 'true';
   });
 
   //年月配列
-  const JanuaryPlus = incomeNum.filter((n) => {
+  const JanuaryPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 1;
   });
-  const JanuaryMinus = spendingNum.filter((n) => {
+  const JanuaryMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 1;
   });
 
-  const FebruaryPlus = incomeNum.filter((n) => {
+  const FebruaryPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 2;
   });
-  const FebruaryMinus = spendingNum.filter((n) => {
+  const FebruaryMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 2;
   });
 
-  const MarchPlus = incomeNum.filter((n) => {
+  const MarchPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 3;
   });
-  const MarchMinus = spendingNum.filter((n) => {
+  const MarchMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 3;
   });
 
-  const AprilPlus = incomeNum.filter((n) => {
+  const AprilPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 4;
   });
-  const AprilMinus = spendingNum.filter((n) => {
+  const AprilMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 4;
   });
 
-  const MayPlus = incomeNum.filter((n) => {
+  const MayPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 5;
   });
-  const MayMinus = spendingNum.filter((n) => {
+  const MayMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 5;
   });
 
-  const JunePlus = incomeNum.filter((n) => {
+  const JunePlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 6;
   });
-  const JuneMinus = spendingNum.filter((n) => {
+  const JuneMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 6;
   });
 
-  const JulyPlus = incomeNum.filter((n) => {
+  const JulyPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 7;
   });
-  const JulyMinus = spendingNum.filter((n) => {
+  const JulyMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 7;
   });
 
-  const AugustPlus = incomeNum.filter((n) => {
+  const AugustPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 8;
   });
-  const AugustMinus = spendingNum.filter((n) => {
+  const AugustMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 8;
   });
 
-  const SeptemberPlus = incomeNum.filter((n) => {
+  const SeptemberPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 9;
   });
-  const SeptemberMinus = spendingNum.filter((n) => {
+  const SeptemberMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 9;
   });
 
-  const OctoberPlus = incomeNum.filter((n) => {
+  const OctoberPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 10;
   });
-  const OctoberMinus = spendingNum.filter((n) => {
+  const OctoberMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 10;
   });
 
-  const NovemberPlus = incomeNum.filter((n) => {
+  const NovemberPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 11;
   });
-  const NovemberMinus = spendingNum.filter((n) => {
+  const NovemberMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 11;
   });
 
-  const DecemberPlus = incomeNum.filter((n) => {
+  const DecemberPlus = incomeNum.filter((n: { month: number; }) => {
     return n.month === 12;
   });
-  const DecemberMinus = spendingNum.filter((n) => {
+  const DecemberMinus = spendingNum.filter((n: { month: number; }) => {
     return n.month === 12;
   });
 
 
 
-  const plusJan = JanuaryPlus.reduce((sum, X) => {
+  const plusJan = JanuaryPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusJan = JanuaryMinus.reduce((sum, X) => {
+  const minusJan = JanuaryMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusFeb = FebruaryPlus.reduce((sum, X) => {
+  const plusFeb = FebruaryPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusFeb = FebruaryMinus.reduce((sum, X) => {
+  const minusFeb = FebruaryMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusMar = MarchPlus.reduce((sum, X) => {
+  const plusMar = MarchPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusMar = MarchMinus.reduce((sum, X) => {
+  const minusMar = MarchMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusApr = AprilPlus.reduce((sum, X) => {
+  const plusApr = AprilPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusApr = AprilMinus.reduce((sum, X) => {
+  const minusApr = AprilMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusMay = MayPlus.reduce((sum, X) => {
+  const plusMay = MayPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusMay = MayMinus.reduce((sum, X) => {
+  const minusMay = MayMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusJun = JunePlus.reduce((sum, X) => {
+  const plusJun = JunePlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusJun = JuneMinus.reduce((sum, X) => {
+  const minusJun = JuneMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusJul = JulyPlus.reduce((sum, X) => {
+  const plusJul = JulyPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusJul = JulyMinus.reduce((sum, X) => {
+  const minusJul = JulyMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusAug = AugustPlus.reduce((sum, X) => {
+  const plusAug = AugustPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusAug = AugustMinus.reduce((sum, X) => {
+  const minusAug = AugustMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusSep = SeptemberPlus.reduce((sum, X) => {
+  const plusSep = SeptemberPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusSep = SeptemberMinus.reduce((sum, X) => {
+  const minusSep = SeptemberMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusOct = OctoberPlus.reduce((sum, X) => {
+  const plusOct = OctoberPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusOct = OctoberMinus.reduce((sum, X) => {
+  const minusOct = OctoberMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusNov = NovemberPlus.reduce((sum, X) => {
+  const plusNov = NovemberPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusNov = NovemberMinus.reduce((sum, X) => {
+  const minusNov = NovemberMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)
 
-  const plusDec = DecemberPlus.reduce((sum, X) => {
+  const plusDec = DecemberPlus.reduce((sum: any, X: { price: any; }) => {
     const plus = sum + X.price;
     return Number(plus);
   }, 0)
 
-  const minusDec = DecemberMinus.reduce((sum, X) => {
+  const minusDec = DecemberMinus.reduce((sum: any, X: { price: any; }) => {
     const minus = sum + X.price;
     return Number(minus);
   }, 0)

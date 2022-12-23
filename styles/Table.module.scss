@@ -31,6 +31,7 @@
         td {
           padding-top: 20px;
           padding-bottom: 6px;
+          font-size: 13px;
         }
 
         .table_first {
@@ -48,6 +49,31 @@
           padding-right: 4px;
         }
       }
+    }
+  }
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    width: 35px;
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 13px;
+    border: 1px solid #707070;
+    border-radius: 3px;
+
+    &.active {
+      color: #fff !important;
+      background: #898F9C !important;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }

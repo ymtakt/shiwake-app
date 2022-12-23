@@ -18,17 +18,7 @@ import {
 import { useAuth } from "../../src/atom";
 import { collection, getFirestore, limit, onSnapshot, orderBy, query, startAfter, startAt, where } from "firebase/firestore";
 import { format } from 'date-fns'
-import {
-  Pagination,
-  usePagination,
-  PaginationNext,
-  PaginationPage,
-  PaginationPrevious,
-  PaginationContainer,
-  PaginationPageGroup,
-  PaginationSeparator,
-} from "@ajna/pagination";
-
+import ReactPaginate from 'react-paginate';
 
 import { Layout } from '../../src/components/Layout'
 import { ContainerBox } from "../../src/Parts/ContainerBox";
@@ -82,19 +72,28 @@ const Mypage: NextPage = () => {
 
   const typeAll = "all";
 
-  const [page, setPage] = useState(10);
+  const itemsPerPage = 10;
 
+  //最初の数字
+  const [itemsOffset, setItemsOffset] = useState(0);
+  //次の頭数
+  const endOffset = itemsOffset + itemsPerPage;
+  const currentDetails = details.slice(itemsOffset, endOffset)
 
+  const pageCount = Math.ceil(details.length / itemsPerPage);
+
+  const handlePageClick = (e: { selected: number }) => {
+    const newOffset = (e.selected * itemsPerPage) % details.length;
+    // console.log(
+    //   `User requested page number ${e.selected}, which is offset ${newOffset}`
+    // );
+    setItemsOffset(newOffset);
+  };
 
   const onOpenModal = (detail: {}) => {
     setModalDetail(detail)
     onOpen()
   }
-
-
-  const updatePost = async () => {
-    setPage(page + 10);
-  };
 
 
   useEffect(() => {
@@ -179,7 +178,9 @@ const Mypage: NextPage = () => {
                   <Thead>
                     <Tr>
                       <Th className={styles.table_first}></Th>
-                      <Th >登録内容</Th>
+                      <Th>決済</Th>
+                      <Th>借方</Th>
+                      <Th>貸方</Th>
                       <Th>金額</Th>
                       <Th>摘要</Th>
                       <Th>取引先</Th>
@@ -188,13 +189,31 @@ const Mypage: NextPage = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {details.map((detail: any) => {
-                      const detailInfo = { id: detail.id, accountDebit: detail.accountDebit, accountCredit: detail.accountCredit, type: detail.type, price: detail.price, date: new Date(), client: detail.client, note: detail.note, file: detail.file, active: detail.active as boolean, tax: detail.tax };
+                    {currentDetails.map((detail: any) => {
+                      const detailInfo = {
+                        id: detail.id,
+                        accountDebit: detail.accountDebit,
+                        accountCredit: detail.accountCredit,
+                        type: detail.type, pl: detail.pl,
+                        payment: detail.payment,
+                        price: detail.price,
+                        price2: detail.price2,
+                        priceTax: detail.priceTax,
+                        priceTax2: detail.priceTax2,
+                        date: format(detail.date.toDate(), 'yyyy-M-d'),
+                        client: detail.client,
+                        note: detail.note,
+                        file: detail.file,
+                        active: detail.active as boolean,
+                        active2: detail.active2 as boolean,
+                        tax: detail.tax,
+                        tax2: detail.tax2
+                      };
                       if (type === 'all') {
                         return (
                           user !== null && (
                             <Tr key={detail.id}>
-                              {console.log(detail.date.toDate())}
+                              {/* {console.log(detail.date.toDate())} */}
                               {detail.type === '収入' && (
                                 <Td className={styles.table_first} color='#00536C' fontWeight='600' >{detail.type}</Td>
                               )}
@@ -202,18 +221,26 @@ const Mypage: NextPage = () => {
                                 <Td className={styles.table_first} color='#E53E3E' fontWeight='600' >{detail.type}</Td>
                               )
                               }
+                              {detail.payment === 'true' && (
+                                <Td color='#00536C' fontWeight='600' ></Td>
+                              )}
+                              {detail.payment === 'false' && (
+                                <Td className={styles.table_payment} color='#E53E3E' fontWeight='600' ><Image src="/check.svg" w='1em' h='1em' alt="" /></Td>
+                              )
+                              }
                               <Td >{detail.accountDebit}</Td>
+                              <Td >{detail.accountCredit}</Td>
                               {
                                 detail.type === '収入' && (
-                                  <Td>+{detail.price}</Td>
+                                  <Td>+{Number(detail.price).toLocaleString()}円</Td>
                                 )
                               }
                               {
                                 detail.type === '支出' && (
-                                  <Td>-{detail.price}</Td>
+                                  <Td>-{Number(detail.price).toLocaleString()}円</Td>
                                 )
                               }
-                              < Td w='30.3%' fontSize='xs' > {detail.note}</Td>
+                              < Td w='20.3%' fontSize='xs' > {detail.note}</Td>
                               <Td>{detail.client}</Td>
                               <Td>{format(detail.date.toDate(), 'yyyy年M月d日')}</Td>
                               <Td isNumeric w='12%' className={styles.table_last_list}>
@@ -233,7 +260,7 @@ const Mypage: NextPage = () => {
                           user !== null && (
                             '収入' === detail.type && (
                               <Tr key={detail.id}>
-                                {console.log(detail.date.toDate())}
+                                {/* {console.log(detail.date.toDate())} */}
                                 {detail.type === '収入' && (
                                   <Td className={styles.table_first} color='#00536C' fontWeight='600' >{detail.type}</Td>
                                 )}
@@ -241,7 +268,15 @@ const Mypage: NextPage = () => {
                                   <Td className={styles.table_first} color='#E53E3E' fontWeight='600' >{detail.type}</Td>
                                 )
                                 }
+                                {detail.type === '収入' && (
+                                  <Td color='#00536C' fontWeight='600' ></Td>
+                                )}
+                                {detail.type === '支出' && (
+                                  <Td className={styles.table_payment} color='#E53E3E' fontWeight='600' ><Image src="/check.svg" w='1em' h='1em' /></Td>
+                                )
+                                }
                                 <Td >{detail.accountDebit}</Td>
+                                <Td >{detail.accountCredit}</Td>
                                 {
                                   detail.type === '収入' && (
                                     <Td>+{detail.price}</Td>
@@ -252,7 +287,7 @@ const Mypage: NextPage = () => {
                                     <Td>-{detail.price}</Td>
                                   )
                                 }
-                                < Td w='30.3%' fontSize='xs' > {detail.note}</Td>
+                                < Td w='20.3%' fontSize='xs' > {detail.note}</Td>
                                 <Td>{detail.client}</Td>
                                 <Td>{format(detail.date.toDate(), 'yyyy年M月d日')}</Td>
                                 <Td isNumeric w='12%' className={styles.table_last_list}>
@@ -273,7 +308,7 @@ const Mypage: NextPage = () => {
                           user !== null && (
                             '支出' === detail.type && (
                               <Tr key={detail.id}>
-                                {console.log(detail.date.toDate())}
+                                {/* {console.log(detail.date.toDate())} */}
                                 {detail.type === '収入' && (
                                   <Td className={styles.table_first} color='#00536C' fontWeight='600' >{detail.type}</Td>
                                 )}
@@ -281,7 +316,15 @@ const Mypage: NextPage = () => {
                                   <Td className={styles.table_first} color='#E53E3E' fontWeight='600' >{detail.type}</Td>
                                 )
                                 }
+                                {detail.type === '収入' && (
+                                  <Td color='#00536C' fontWeight='600' ></Td>
+                                )}
+                                {detail.type === '支出' && (
+                                  <Td className={styles.table_payment} color='#E53E3E' fontWeight='600' ><Image src="/check.svg" w='1em' h='1em' /></Td>
+                                )
+                                }
                                 <Td >{detail.accountDebit}</Td>
+                                <Td >{detail.accountCredit}</Td>
                                 {
                                   detail.type === '収入' && (
                                     <Td>+{detail.price}</Td>
@@ -292,7 +335,7 @@ const Mypage: NextPage = () => {
                                     <Td>-{detail.price}</Td>
                                   )
                                 }
-                                < Td w='30.3%' fontSize='xs' > {detail.note}</Td>
+                                < Td w='20.3%' fontSize='xs' > {detail.note}</Td>
                                 <Td>{detail.client}</Td>
                                 <Td>{format(detail.date.toDate(), 'yyyy年M月d日')}</Td>
                                 <Td isNumeric w='12%' className={styles.table_last_list}>
@@ -309,43 +352,6 @@ const Mypage: NextPage = () => {
                           )
                         )
                       }
-                      // return (
-                      //   user !== null && (
-                      //     <Tr key={detail.id}>
-                      //       {console.log(detail.date.toDate())}
-                      //       {detail.type === '収入' && (
-                      //         <Td className={styles.table_first} color='#00536C' fontWeight='600' >{detail.type}</Td>
-                      //       )}
-                      //       {detail.type === '支出' && (
-                      //         <Td className={styles.table_first} color='#E53E3E' fontWeight='600' >{detail.type}</Td>
-                      //       )
-                      //       }
-                      //       <Td >{detail.accountDebit}</Td>
-                      //       {
-                      //         detail.type === '収入' && (
-                      //           <Td>+{detail.price}</Td>
-                      //         )
-                      //       }
-                      //       {
-                      //         detail.type === '支出' && (
-                      //           <Td>-{detail.price}</Td>
-                      //         )
-                      //       }
-                      //       < Td w='30.3%' fontSize='xs' > {detail.note}</Td>
-                      //       <Td>{detail.client}</Td>
-                      //       <Td>{format(detail.date.toDate(), 'yyyy年M月d日')}</Td>
-                      //       <Td isNumeric w='12%' className={styles.table_last_list}>
-                      //         <Button onClick={() => onOpenModal(detail)} display='inline-block' h='auto' p='8px 7px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>詳細</Button>
-                      //         <Link
-                      //           as={`/account/${detail.id}`}
-                      //           href={{ pathname: `/account/[id]`, query: detailInfo }}
-                      //         >
-                      //           <Button display='inline-block' h='auto' p='8px 7px' marginLeft='8px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>編集</Button>
-                      //         </Link>
-                      //       </Td>
-                      //     </Tr>
-                      //   )
-                      // )
                     })}
                   </Tbody>
 
@@ -354,13 +360,16 @@ const Mypage: NextPage = () => {
             </Box>
 
             <nav style={{ textAlign: 'center' }}>
-              {/* <Box>
-                <Link href={'/'} style={{ display: 'inline-block', width: '35px', padding: '5px', marginRight: '10px', fontSize: '13px', border: '1px solid #707070', borderRadius: '3px' }}>前</Link>
-                <Box as="span" style={{ display: 'inline-block', width: '35px', padding: '5px', marginRight: '10px', fontSize: '13px', background: '#898F9C', border: '1px solid #707070', borderRadius: '3px' }}>1</Box>
-                <Link href={'/'} style={{ display: 'inline-block', width: '35px', padding: '5px', marginRight: '10px', fontSize: '13px', border: '1px solid #707070', borderRadius: '3px' }}>2</Link>
-                <Link href={'/'} style={{ display: 'inline-block', width: '35px', padding: '5px', fontSize: '13px', border: '1px solid #707070', borderRadius: '3px' }}>後</Link>
-              </Box> */}
-              <Button onClick={() => updatePost()} display='inline-block' padding='5px' fontSize='13px' >さらに記事をロードする</Button>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="前"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="後"
+                className={styles.navigation}
+                activeClassName={styles.active}
+              />
             </nav>
           </ContainerBox>
         </Box>
@@ -383,13 +392,39 @@ const Mypage: NextPage = () => {
                   <SubText marginBottom='10px'>
                     収支
                   </SubText>
-                  <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.type}</Text>
+                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.type}</Text>
                 </Box>
-                <Box>
+                <Box marginRight='25px'>
                   <SubText marginBottom='10px'>
                     取引先
                   </SubText>
                   <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.client}</Text>
+                </Box>
+                <Box marginRight='25px'>
+                  <SubText marginBottom='10px'>
+                    損益
+                  </SubText>
+                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
+                    {modalDetail.pl === true
+                      ?
+                      '計算する'
+                      :
+                      '計算しない'
+                    }
+                  </Text>
+                </Box>
+                <Box>
+                  <SubText marginBottom='10px'>
+                    決済
+                  </SubText>
+                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
+                    {modalDetail.payment === true
+                      ?
+                      '完了'
+                      :
+                      '未完了'
+                    }
+                  </Text>
                 </Box>
               </Flex>
 
@@ -424,12 +459,12 @@ const Mypage: NextPage = () => {
                       }
                     </Flex>
                     <Box>
-                      {/* <Flex align='center' justifyContent='space-between'>
+                      <Flex align='center' justifyContent='space-between'>
                         <SubText>
                           税率
                         </SubText>
-                        <Text>¥0</Text>
-                      </Flex> */}
+                        <Text>¥{Number(modalDetail.priceTax).toLocaleString()}</Text>
+                      </Flex>
                       <Flex align='center' justifyContent='space-between'>
                         <SubText>
                           合計
@@ -442,7 +477,7 @@ const Mypage: NextPage = () => {
 
                 <Box>
                   <SubText marginBottom='10px'>
-                    借方
+                    貸方
                   </SubText>
                   <Flex marginBottom='15px'>
                     <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px' marginRight='25px'>{modalDetail.accountCredit}</Text>
@@ -453,14 +488,14 @@ const Mypage: NextPage = () => {
                       <SubText>
                         税率
                       </SubText>
-                      {modalDetail.tax === '10%'
+                      {modalDetail.tax2 === '10%'
                         &&
                         <>
                           <Button disabled={true} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor='#3AA796' color='#fff' opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
                           <Button disabled={true} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor='#fff' color='#3AA796' border='1px solid #3AA796' opacity='1 !important' fontSize='12px' textAlign='center'>なし</Button>
                         </>
                       }
-                      {modalDetail.tax === '0%'
+                      {modalDetail.tax2 === '0%'
                         &&
                         <>
                           <Button disabled={true} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor='#fff' color='#3AA796' border='1px solid #3AA796' opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
@@ -469,12 +504,12 @@ const Mypage: NextPage = () => {
                       }
                     </Flex>
                     <Box>
-                      {/* <Flex align='center' justifyContent='space-between'>
+                      <Flex align='center' justifyContent='space-between'>
                         <SubText>
                           税率
                         </SubText>
-                        <Text>¥0</Text>
-                      </Flex> */}
+                        <Text>¥{Number(modalDetail.priceTax2).toLocaleString()}</Text>
+                      </Flex>
                       <Flex align='center' justifyContent='space-between'>
                         <SubText>
                           合計
@@ -496,7 +531,7 @@ const Mypage: NextPage = () => {
 
               <Box marginBottom='30px'>
                 <SubText marginBottom='10px'>
-                  取引先
+                  備考
                 </SubText>
                 <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.note}</Text>
               </Box>
@@ -508,6 +543,7 @@ const Mypage: NextPage = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
     </>
   )
 }

@@ -46,24 +46,24 @@ const Mypage: NextPage = () => {
 
 
   //収入配列
-  const positiveNum = detailsMonth.filter((n) => {
-    const positiveNumber = n.type === '収入';
+  const positiveNum = detailsMonth.filter((n: { type: string; pl: string; }) => {
+    const positiveNumber = n.type === '収入' && n.pl === 'true';
     return positiveNumber;
   });
 
 
   //支出配列
-  const negativeNum = detailsMonth.filter((n) => {
-    const negativeNumber = n.type === '支出';
+  const negativeNum = detailsMonth.filter((n: { type: string; pl: string; }) => {
+    const negativeNumber = n.type === '支出' && n.pl === 'true';
     return negativeNumber;
   });
 
-  const plus = positiveNum.reduce((sum, detailMonth) => {
+  const plus = positiveNum.reduce((sum: any, detailMonth: { price: any; }) => {
     const plus = sum + detailMonth.price;
     return plus;
   }, 0)
 
-  const minus = negativeNum.reduce((sum, detailMonth) => {
+  const minus = negativeNum.reduce((sum: any, detailMonth: { price: any; }) => {
     const minus = sum + detailMonth.price;
     return minus;
   }, 0)
@@ -85,7 +85,7 @@ const Mypage: NextPage = () => {
         const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
 
         //全て5個まで読み込み
-        const q = query(usersCollectionRef, where("month", "==", thisMonth), orderBy('timestamp', 'desc'), limit(5));
+        const q = query(usersCollectionRef, where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
         await onSnapshot(
           q, (snapshot) => setDetails(snapshot.docs.map((doc) => (
             { ...doc.data(), id: doc.id }
@@ -156,7 +156,13 @@ const Mypage: NextPage = () => {
                         return (
                           user !== null && (
                             <Tr key={detail.id}>
-                              <Td className={styles.table_first}>{detail.accountDebit}</Td>
+                              {detail.type === '収入' && (
+                                <Td className={styles.table_first}>{detail.accountCredit}</Td>
+                              )}
+                              {detail.type === '支出' && (
+                                <Td className={styles.table_first}>{detail.accountDebit}</Td>
+                              )
+                              }
                               {detail.type === '収入' && (
                                 <Td>+{detail.price}</Td>
                               )}

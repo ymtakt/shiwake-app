@@ -1,0 +1,5 @@
+.select {
+  option:disabled {
+    color: -internal-light-dark(graytext, rgb(170, 170, 170));
+  }
+}

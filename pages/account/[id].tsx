@@ -130,6 +130,8 @@ const Id = () => {
           .join("");
         const fileName = randomChar + "_" + fileObject.name;
 
+        console.log(user.uid)
+
         const mountainsRef = ref(storage, `${user.uid}/data/${fileName}`);
         console.log(storage)
         uploadBytes(mountainsRef, fileObject).then((url) => {
@@ -137,7 +139,7 @@ const Id = () => {
           getDownloadURL(mountainsRef).then(url => {
             // const URL = url.toString()
             setPhotoURL(url);
-            // console.log(url)
+            console.log(url)
             // console.log(photoURL)
 
           });
@@ -145,7 +147,10 @@ const Id = () => {
       }
     }
   }
-
+  const onDeleteClick = () => {
+    setPhotoURL(null)
+    setFile("")
+  }
 
   const onClickDelete = async (id: string | undefined) => {
     if (user) {
@@ -218,10 +223,10 @@ const Id = () => {
     <>
       <Layout>
         <Box w='100%'>
-          <HeadSecond>{router.query.id}の仕訳編集</HeadSecond>
+          <HeadSecond>仕訳編集</HeadSecond>
           <ContainerBox>
-            <Flex marginBottom='30px'>
-              <Box marginRight='25px'>
+            <Flex marginBottom='30px' flexWrap={{ base: "wrap", md: "nowrap" }}>
+              <Box w={{ base: "40%", md: "auto" }} marginRight='25px' marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
                   日付
                 </SubText>
@@ -234,7 +239,7 @@ const Id = () => {
                   onChange={e => handleChangeDate(e)}
                 />
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "39%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
                   収支
                 </SubText>
@@ -251,7 +256,7 @@ const Id = () => {
                   <option value='支出'>支出</option>
                 </Select>
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }} marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
                   取引先
                 </SubText>
@@ -265,7 +270,7 @@ const Id = () => {
                   onChange={e => setClient(e.target.value)}
                 />
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "26%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
                   損益
                 </SubText>
@@ -281,7 +286,7 @@ const Id = () => {
                   <option value='false'>計算しない</option>
                 </Select>
               </Box>
-              <Box>
+              <Box w={{ base: "20%", md: "auto" }} >
                 <SubText marginBottom='10px'>
                   決済
                 </SubText>
@@ -299,8 +304,8 @@ const Id = () => {
               </Box>
             </Flex>
 
-            <Flex justify='space-between' align='flex-start' marginBottom='30px'>
-              <Box marginRight='25px'>
+            <Flex justify='space-between' align='flex-start' flexWrap={{ base: "wrap", md: "nowrap" }} marginBottom='30px'>
+              <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }}>
                 <SubText marginBottom='10px'>
                   借方
                 </SubText>
@@ -382,7 +387,7 @@ const Id = () => {
                 </Flex>
               </Box>
 
-              <Box>
+              <Box w={{ base: "100%", md: "auto" }}>
                 <SubText marginBottom='10px'>
                   貸方
                 </SubText>
@@ -474,7 +479,7 @@ const Id = () => {
               // value={file}
               // onChange={e => setFile(e.target.value)}
               /> */}
-              <Flex>
+              <Flex flexWrap={{ base: "wrap", md: "nowrap" }}>
                 {/* <Box ref={fileName}></Box> */}
                 <Input
                   id="image"
@@ -485,14 +490,27 @@ const Id = () => {
                   accept="image/png,image/jpeg,image/gif/,application/pdf"
                   onChange={handleChangePhotoURL}
                 />
-                <Button
-                  onClick={onButtonClick}
-                  w='330px'
-                  borderColor='#AAE2CF'
-                >
-                  ファイルを選択
-                </Button>
-                <Image src={file} alt="" display='block' w='48%' h='auto' marginLeft='auto' objectFit='cover' />
+                <Box marginBottom={{ base: "25px", md: "0" }}>
+                  <Button
+                    onClick={onButtonClick}
+                    w='330px'
+                    borderColor='#AAE2CF'
+                  >
+                    ファイルを選択
+                  </Button>
+                  {file &&
+                    <Button
+                      onClick={onDeleteClick}
+                      w='250px'
+                      borderColor='#AAE2CF'
+                      display='block'
+                      marginTop='35px'
+                    >
+                      削除
+                    </Button>
+                  }
+                </Box>
+                <Image w={{ base: "100%", md: "48%" }} src={file} alt="" display='block' h='auto' marginLeft='auto' objectFit='cover' />
               </Flex>
             </Box>
 

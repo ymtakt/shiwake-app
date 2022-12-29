@@ -1,47 +1,278 @@
+import { addYears, format, subYears } from "date-fns";
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import Link from "next/link";
 import { Box, Flex, TableContainer, Table, Thead, Tbody, Th, Td, Tr } from '@chakra-ui/react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
-import { collection, doc, getFirestore, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { format, addYears, subYears } from 'date-fns'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { faker } from '@faker-js/faker';
 
 import { Layout } from '../../src/components/Layout'
 import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
-import { useAuth } from "../../src/atom";
-import { app } from "../../src/firebase";
+import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 
 import report from '../../styles/Report.module.scss';
+import { useAuth } from "../../src/atom";
+import { collection, doc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { app } from "../../src/firebase";
 
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-const Report: NextPage = () => {
 
+const Year: NextPage = () => {
 
-  //今月の内容全て
-  const [details, setDetails] = useState<any>([]);
-  //データのステート
-  const [userData, setUserData] = useState<any>();
-  //今月の内容全て
-  const [detailsMonth, setDetailsMonth] = useState<any>([]);
   //年のステート
   const [nowYear, setNowYear] = useState<any>(new Date());
   const year = Number(format(nowYear, 'yyyy'));
-  //月のステート
-  const [nowMonth, setNowMonth] = useState<any>(new Date().getMonth() + 1);
+
+  //データのステート
+  const [userData, setUserData] = useState<any>();
+  //今月の内容全て
+  const [detailsYear, setDetailsYear] = useState<any>([]);
 
   //Recoilのログイン状態
   const user = useAuth();
+  // console.log(user)
 
   //データベース接続
   const db = getFirestore(app);
 
 
-  //クリックイベント
+  //収入配列
+  const incomeNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
+    return n.type === '収入' && n.year === year && n.pl === 'true';
+  });
+  //支出配列
+  const spendingNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
+    return n.type === '支出' && n.year === year && n.pl === 'true';
+  });
+
+  //年月配列
+  const JanuaryPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 1;
+  });
+  const JanuaryMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 1;
+  });
+
+  const FebruaryPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 2;
+  });
+  const FebruaryMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 2;
+  });
+
+  const MarchPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 3;
+  });
+  const MarchMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 3;
+  });
+
+  const AprilPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 4;
+  });
+  const AprilMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 4;
+  });
+
+  const MayPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 5;
+  });
+  const MayMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 5;
+  });
+
+  const JunePlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 6;
+  });
+  const JuneMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 6;
+  });
+
+  const JulyPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 7;
+  });
+  const JulyMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 7;
+  });
+
+  const AugustPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 8;
+  });
+  const AugustMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 8;
+  });
+
+  const SeptemberPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 9;
+  });
+  const SeptemberMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 9;
+  });
+
+  const OctoberPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 10;
+  });
+  const OctoberMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 10;
+  });
+
+  const NovemberPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 11;
+  });
+  const NovemberMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 11;
+  });
+
+  const DecemberPlus = incomeNum.filter((n: { month: number; }) => {
+    return n.month === 12;
+  });
+  const DecemberMinus = spendingNum.filter((n: { month: number; }) => {
+    return n.month === 12;
+  });
+
+
+
+  const plusJan = JanuaryPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusJan = JanuaryMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusFeb = FebruaryPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusFeb = FebruaryMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusMar = MarchPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusMar = MarchMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusApr = AprilPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusApr = AprilMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusMay = MayPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusMay = MayMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusJun = JunePlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusJun = JuneMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusJul = JulyPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusJul = JulyMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusAug = AugustPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusAug = AugustMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusSep = SeptemberPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusSep = SeptemberMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusOct = OctoberPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusOct = OctoberMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusNov = NovemberPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusNov = NovemberMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+  const plusDec = DecemberPlus.reduce((sum: any, X: { price: any; }) => {
+    const plus = sum + X.price;
+    return Number(plus);
+  }, 0)
+
+  const minusDec = DecemberMinus.reduce((sum: any, X: { price: any; }) => {
+    const minus = sum + X.price;
+    return Number(minus);
+  }, 0)
+
+
+  //年変更クリックイベント
   const onclickLastYear = () => {
     const lastYear = subYears(nowYear, 1);
     setNowYear(lastYear)
@@ -50,45 +281,34 @@ const Report: NextPage = () => {
     const nextYear = addYears(nowYear, 1);
     setNowYear(nextYear)
   }
-  const onClickMonth = (e: number) => {
-    setNowMonth(e)
-  }
 
-
-  //収入配列
-  const positiveNum = detailsMonth.filter((n: { type: string; }) => {
-    const positiveNumber = n.type === '収入';
-    return positiveNumber;
-  });
-  //支出配列
-  const negativeNum = detailsMonth.filter((n: { type: string; }) => {
-    const negativeNumber = n.type === '支出';
-    return negativeNumber;
-  });
-
-  const plus = positiveNum.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minus = negativeNum.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-
+  //グラフ用
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+      },
+    },
+  };
+  const labels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
   const data = {
-    labels: ['収入', '支出'],
+    labels,
     datasets: [
       {
-        // label: '# of Votes',
-        data: [plus, minus],
-        backgroundColor: [
-          '#4D88B5',
-          '#397561',
-          '#000',
-        ],
-        borderWidth: 1,
+        label: '収入',
+        // data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+        data: [plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec],
+        backgroundColor: '#59A0E6',
+      },
+      {
+        label: '支出',
+        // data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+        data: [minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec],
+        backgroundColor: '#E67A59',
       },
     ],
   };
@@ -103,141 +323,113 @@ const Report: NextPage = () => {
           setUserData(doc.data())
         });
 
-        //ユーザーデータ読み込み
-        const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
         //今月の内容全て読み込み
-        const qSum = query(usersCollectionRef,
-          where('year', '==', year),
-          where('month', '==', nowMonth),
-          orderBy('date', 'desc'));
-        await onSnapshot(
-          qSum, (snapshot) => setDetailsMonth(snapshot.docs.map((doc) => (
-            { ...doc.data(), id: doc.id }
-          )))
-          , //取得時にidをdoc.idにする
-          (error) => {
-            console.log(error.message);
-          },
-        );
+        //getDocs
+        const ref = query(collection(db, 'users', user.uid, 'details'), where('year', '==', year), orderBy('date', 'desc'));
+        const docSnapw = await getDocs(ref);
+        setDetailsYear(docSnapw.docs.map((doc) => (
+          { ...doc.data(), id: doc.id }
+        )));
+
 
       }
     })()
-  }, [user, nowMonth, nowYear]);
-
-
+  }, [user, nowYear]);
 
   return (
     <>
       <Layout>
         <Box w='100%'>
-          <HeadSecond>月次収支レポート</HeadSecond>
-          <Box marginBottom='35px'>
-            <ButtonPrimary marginRight="12px">月次収支レポート</ButtonPrimary>
-            <Link href={'/report/year'}>
-              <Buttonsecondary>年間収支レポート</Buttonsecondary>
+          <HeadSecond>年間収支レポート</HeadSecond>
+          {/* <Box marginBottom='35px'>
+            <Link href={'/report'}>
+              <Buttonsecondary>月次収支レポート</Buttonsecondary>
             </Link>
-          </Box>
+            <ButtonPrimary>年間収支レポート</ButtonPrimary>
+          </Box> */}
           <Flex className={report.mav_flex}>
             <Box className={report.prev} onClick={onclickLastYear}>前の年</Box>
-            <ul className={report.list} >
-              <li onClick={() => onClickMonth(1)}>1月</li>
-              <li onClick={() => onClickMonth(2)}>2月</li>
-              <li onClick={() => onClickMonth(3)}>3月</li>
-              <li onClick={() => onClickMonth(4)}>4月</li>
-              <li onClick={() => onClickMonth(5)}>5月</li>
-              <li onClick={() => onClickMonth(6)}>6月</li>
-              <li onClick={() => onClickMonth(7)}>7月</li>
-              <li onClick={() => onClickMonth(8)}>8月</li>
-              <li onClick={() => onClickMonth(9)}>9月</li>
-              <li onClick={() => onClickMonth(10)}>10月</li>
-              <li onClick={() => onClickMonth(11)}>11月</li>
-              <li onClick={() => onClickMonth(12)}>12月</li>
-            </ul>
+            <Box className={report.list}>{year}年</Box>
             <Box className={report.next} onClick={onclickNextYear}>次の年</Box>
           </Flex>
-          <Flex justifyContent='space-between'>
-            <Box w='40%'>
-              <Box>
-                {year}年
-                {nowMonth}月
-              </Box>
-              <Pie data={data} />
-            </Box>
-            <Box w='50%' className={report.table_month}>
-              <Box>
-                収入
-              </Box>
-              <TableContainer className={report.box}>
-                <Table variant='simple'>
-                  <Thead>
-                    <Tr>
-                      <Th>会社名</Th>
-                      <Th>金額</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {/* {details ? */}
-                    {
-                      detailsMonth.map((detail: any) => {
-                        return (
-                          user !== null && (
-                            detail.type === '収入' && (
-                              <Tr className={report.tr_color} key={detail.id}>
-                                <Td >{detail.client}</Td>
-                                <Td>+{detail.price}円</Td>
-                              </Tr>
-                            )
-                          )
-                        )
-                      })
-                    }
-                    {/* :
-                      <Text>ありません</Text>
-                    } */}
-                  </Tbody>
+          <Box marginBottom='90px'>
+            <Bar options={options} data={data} />
+          </Box>
+          <Box className={report.table_year}>
+            <TableContainer>
+              <Table variant='simple'>
+                <Thead>
+                  <Tr>
+                    <Th></Th>
+                    <Th>{year}年1月</Th>
+                    <Th>{year}年2月</Th>
+                    <Th>{year}年3月</Th>
+                    <Th>{year}年4月</Th>
+                    <Th>{year}年5月</Th>
+                    <Th>{year}年6月</Th>
+                    <Th>{year}年7月</Th>
+                    <Th>{year}年8月</Th>
+                    <Th>{year}年9月</Th>
+                    <Th>{year}年10月</Th>
+                    <Th>{year}年11月</Th>
+                    <Th>{year}年12月</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>収入</Td>
+                    <Td>+{plusJan}円</Td>
+                    <Td>+{plusFeb}円</Td>
+                    <Td>+{plusMar}円</Td>
+                    <Td>+{plusApr}円</Td>
+                    <Td>+{plusMay}円</Td>
+                    <Td>+{plusJun}円</Td>
+                    <Td>+{plusJul}円</Td>
+                    <Td>+{plusAug}円</Td>
+                    <Td>+{plusSep}円</Td>
+                    <Td>+{plusOct}円</Td>
+                    <Td>+{plusNov}円</Td>
+                    <Td>+{plusDec}円</Td>
 
-                </Table>
-              </TableContainer>
+                  </Tr>
+                  <Tr>
+                    <Td>支出</Td>
+                    <Td>-{minusJan}円</Td>
+                    <Td>-{minusFeb}円</Td>
+                    <Td>-{minusMar}円</Td>
+                    <Td>-{minusApr}円</Td>
+                    <Td>-{minusMay}円</Td>
+                    <Td>-{minusJun}円</Td>
+                    <Td>-{minusJul}円</Td>
+                    <Td>-{minusAug}円</Td>
+                    <Td>-{minusSep}円</Td>
+                    <Td>-{minusOct}円</Td>
+                    <Td>-{minusNov}円</Td>
+                    <Td>-{minusDec}円</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>合計</Td>
+                    <Td>{plusJan - minusJan}円</Td>
+                    <Td>{plusFeb - minusFeb}円</Td>
+                    <Td>{plusMar - minusMar}円</Td>
+                    <Td>{plusApr - minusApr}円</Td>
+                    <Td>{plusMay - minusMay}円</Td>
+                    <Td>{plusJun - minusJun}円</Td>
+                    <Td>{plusJul - minusJul}円</Td>
+                    <Td>{plusAug - minusAug}円</Td>
+                    <Td>{plusSep - minusSep}円</Td>
+                    <Td>{plusOct - minusOct}円</Td>
+                    <Td>{plusNov - minusNov}円</Td>
+                    <Td>{plusDec - minusDec}円</Td>
+                  </Tr>
+                </Tbody>
 
-              <Box>
-                支出
-              </Box>
-              <TableContainer>
-                <Table variant='simple'>
-                  <Thead>
-                    <Tr>
-                      <Th>科目</Th>
-                      <Th>金額</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {/* {details ? */}
-                    {
-                      detailsMonth.map((detail: any) => {
-                        return (
-                          user !== null && (
-                            detail.type === '支出' && (
-                              <Tr className={report.tr_color} key={detail.id}>
-                                <Td >{detail.accountDebit}</Td>
-                                <Td>-{detail.price}円</Td>
-                              </Tr>
-                            )
-                          )
-                        )
-                      })
-                    }
-                    {/* :
-                      <Text>ありません</Text>
-                    } */}
-                  </Tbody>
-
-                </Table>
-              </TableContainer>
-            </Box>
-          </Flex>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
       </Layout>
     </>
   )
 }
-export default Report;
+export default Year;

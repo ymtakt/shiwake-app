@@ -22,7 +22,7 @@ import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 
 import report from '../../styles/Report.module.scss';
 import { useAuth } from "../../src/atom";
-import { collection, doc, getFirestore, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { app } from "../../src/firebase";
 
 
@@ -324,20 +324,26 @@ const Year: NextPage = () => {
         });
 
         //ユーザーデータ読み込み
-        const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
+        //onSnapshot
+        // const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
         //今月の内容全て読み込み
-        const qSum = query(usersCollectionRef,
-          where('year', '==', year),
-          orderBy('date', 'desc'));
-        await onSnapshot(
-          qSum, (snapshot) => setDetailsYear(snapshot.docs.map((doc) => (
-            { ...doc.data(), id: doc.id }
-          )))
-          , //取得時にidをdoc.idにする
-          (error) => {
-            console.log(error.message);
-          },
-        );
+        // const qSum = query(usersCollectionRef, where('year', '==', year), orderBy('date', 'desc'));
+        // await onSnapshot(
+        //   qSum, (snapshot) => setDetailsYear(snapshot.docs.map((doc) => (
+        //     { ...doc.data(), id: doc.id }
+        //   )))
+        //   , //取得時にidをdoc.idにする
+        //   (error) => {
+        //     console.log(error.message);
+        //   },
+        // );
+        //getDocs
+        const ref = query(collection(db, 'users', user.uid, 'details'), where('year', '==', year), orderBy('date', 'desc'));
+        const docSnapw = await getDocs(ref);
+        setDetailsYear(docSnapw.docs.map((doc) => (
+          { ...doc.data(), id: doc.id }
+        )));
+
 
       }
     })()

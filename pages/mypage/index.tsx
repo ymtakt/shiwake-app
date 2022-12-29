@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import Link from "next/link";
-import { Flex, Box, Image, Text, TableContainer, Table, Thead, Tbody, Th, Td, Tr, Button } from '@chakra-ui/react'
-import { addDoc, collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query, setDoc, startAt, Timestamp, where } from 'firebase/firestore'
+import { Flex, Box, Image, Text, TableContainer, Table, Thead, Tbody, Th, Td, Tr, Button, color } from '@chakra-ui/react'
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, setDoc, startAt, Timestamp, where } from 'firebase/firestore'
 import { format } from 'date-fns'
 
 import { Layout } from '../../src/components/Layout'
@@ -19,20 +19,27 @@ import { useRouter } from "next/router";
 const Mypage: NextPage = () => {
 
   //データのステート
-  const [userData, setUserData] = useState<any>();
+  const [userData, setUserData] = useState<any>([]);
+
   //これまで全て5個まで
   const [details, setDetails] = useState<any>([]);
   //今月の内容全て
   const [detailsMonth, setDetailsMonth] = useState<any>([]);
+
+  const [detailstest, setDetailstest] = useState<any>([]);
+  const [detailsMontha, setDetailsMontha] = useState<any>([]);
+
   //画像のステート
-  const [src, setSrc] = useState("");
+  const [src, setSrc] = useState<any>();
+  // const [src, setSrc] = useState("");
 
   //Recoilのログイン状態
   const user = useAuth();
   // console.log(user)
 
   //データベース接続
-  const db = getFirestore(app);
+  const db = getFirestore();
+  // const db = getFirestore(app);
 
   //ルーティング
   const router = useRouter();
@@ -76,56 +83,72 @@ const Mypage: NextPage = () => {
 
       if (user) {
 
-        //ユーザー読み込み
-        await onSnapshot(doc(db, "users", user.uid), (doc) => {
-          setUserData(doc.data())
-        });
-
         //ユーザーデータ読み込み
-        const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
+        // const usersCollectionRef = collection(db, 'users', user.uid, 'details');
 
-        //全て5個まで読み込み
-        const q = query(usersCollectionRef, where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
-        await onSnapshot(
-          q, (snapshot) => setDetails(snapshot.docs.map((doc) => (
-            { ...doc.data(), id: doc.id }
-          ))), //取得時にidをdoc.idにする
-          (error) => {
-            console.log(error.message);
-          },
-        );
+        //今月の全て5個まで読み込み
+        //getDocs
+        const ref = query(collection(db, 'users', user.uid, 'details'), where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
+        const docSnapw = await getDocs(ref);
+        setDetails(docSnapw.docs.map((doc) => (
+          { ...doc.data(), id: doc.id }
+        )));
+        //onSnapshot
+        // const q = query(usersCollectionRef, where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
+        // onSnapshot(
+        //   q, (snapshot) => setDetails(snapshot.docs.map((doc) => (
+        //     { ...doc.data(), id: doc.id }
+        //   ))), //取得時にidをdoc.idにするget
+        //   (error) => {
+        //     console.log(error.message);
+        //   },
+        // );
 
         //今月の内容全て読み込み
-        const qSum = query(usersCollectionRef,
-          where("month", "==", thisMonth));
-        await onSnapshot(
-          qSum, (snapshot) => setDetailsMonth(snapshot.docs.map((doc) => (
-            { ...doc.data(), id: doc.id }
-          ))), //取得時にidをdoc.idにする
-          (error) => {
-            console.log(error.message);
-          },
-        );
+        //getDocs
+        const refa = query(collection(db, 'users', user.uid, 'details'), where("month", "==", thisMonth));
+        const docSnapwa = await getDocs(refa);
+        setDetailsMonth(docSnapwa.docs.map((doc) => (
+          { ...doc.data(), id: doc.id }
+        )));
+        //onSnapshot
+        // const qSum = query(usersCollectionRef, where("month", "==", thisMonth));
+        // onSnapshot(
+        //   qSum, (snapshot) => setDetailsMonth(snapshot.docs.map((doc) => (
+        //     { ...doc.data(), id: doc.id }
+        //   ))), //取得時にidをdoc.idにする
+        //   (error) => {
+        //     console.log(error.message);
+        //   },
+        // );
 
-        //ユーザーのphotoURLを取得
+
+        // const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
+        //   console.log("Current data: ", doc.data());
+        // });
+
+        // ユーザーのphotoURLを取得
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
+          console.log(docSnap.data())
           setSrc(docSnap.data().photoURL);
         } else {
           console.log("No such document!");
         }
+        console.log(src)
+        // return () => unsub()
       }
-    })()
-  }, [user]);
 
+    })()
+  }, [user, src]);
 
 
   return (
     <>
       <Layout>
-        <Flex justify='space-between'>
-          <Box w='47%'>
+        <Flex justify='space-between' display={{ base: "block", md: "flex" }}>
+          <Box w={{ base: "100%", md: "47%" }} marginBottom={{ base: "45px", md: "0" }} >
             <HeadSecond>今月の仕訳</HeadSecond>
             <ContainerBox>
               <Box marginBottom='40px' borderBottom='1px solid #D9E0E8' >
@@ -164,10 +187,10 @@ const Mypage: NextPage = () => {
                               )
                               }
                               {detail.type === '収入' && (
-                                <Td>+{detail.price}</Td>
+                                <Td>+{detail.price.toLocaleString()}円</Td>
                               )}
                               {detail.type === '支出' && (
-                                <Td>-{detail.price}</Td>
+                                <Td>-{detail.price.toLocaleString()}円</Td>
                               )
                               }
                               <Td isNumeric className={styles.table_last}>{format(detail.date.toDate(), 'yyyy年M月d日')}</Td>
@@ -187,17 +210,19 @@ const Mypage: NextPage = () => {
               </Box>
             </ContainerBox>
           </Box>
-          <Box w='47%'>
+          <Box w={{ base: "100%", md: "47%" }}>
             <Box marginBottom='45px'>
               <HeadSecond>アカウント情報</HeadSecond>
               <ContainerBox>
-                <Flex align='flex-start' justify='space-between' marginBottom='45px'>
+                <Flex display={{ base: "block", md: "flex" }} align='flex-start' justify='space-between' marginBottom='45px'>
                   {/* {user !== null ? <Image src="/profire-default.svg" alt="" w='85px' h='auto' /> : 'no image'} */}
-                  {user !== null &&
+                  {src ?
                     <Image src={src} alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
+                    // <Image src={src} alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
+                    :
+                    <Image src='/profire-default.svg' alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
                   }
-                  {/* <Image src="/profire-default.svg" alt="" w='85px' h='auto' /> */}
-                  <Box w='255px'>
+                  <Box w={{ base: "100%", md: "255px" }} marginTop={{ base: "35px", md: "0" }}>
                     <Box marginBottom='25px'>
                       <SubText marginBottom='10px'>
                         アカウント名
@@ -224,16 +249,16 @@ const Mypage: NextPage = () => {
               </ContainerBox>
             </Box>
             <Flex justify='space-between'>
-              <Link href={'/'} style={{ width: '47%' }}>
-                <Image src="/bnr-usage.png" alt="" w='100%' h='auto' />
+              <Link href={'/usage'} style={{ width: '47%' }}>
+                <Image src="/bnr-usage.png" alt="" w='100%' h='auto' border='4px solid #673B00' />
               </Link>
-              <Link href={'/'} style={{ width: '47%' }}>
-                <Image src="/bnr-report.png" alt="" w='100%' h='auto' />
+              <Link href={'/report'} style={{ width: '47%' }}>
+                <Image src="/bnr-report.png" alt="" w='100%' h='auto' border='4px solid #229C8B' />
               </Link>
             </Flex>
           </Box>
         </Flex>
-      </Layout>
+      </Layout >
     </>
   )
 }

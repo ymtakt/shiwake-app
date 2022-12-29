@@ -1,7 +1,11 @@
 import { NextPage } from "next/types";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Box, Text, Flex, Select, Input, Textarea, Button, Image } from '@chakra-ui/react'
+import {
+  Box, Text, Flex, Select, Input, Textarea, Button, Image, Alert,
+
+} from '@chakra-ui/react'
+
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
 import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react";
@@ -21,11 +25,11 @@ import styles from '../../styles/Select.module.scss';
 const Mypage: NextPage = () => {
   const [accountDebit, setAccountDebit] = useState("");
   const [accountCredit, setAccountCredit] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(null);
   const [price, setPrice] = useState("");
 
-  const [pl, setPl] = useState(true);
-  const [payment, setPayment] = useState(true);
+  const [pl, setPl] = useState("true");
+  const [payment, setPayment] = useState("true");
 
   //計算後の金額を登録
   const [calcPriceDebit, setCalcPriceDebit] = useState<number>();
@@ -35,11 +39,12 @@ const Mypage: NextPage = () => {
   const [calcTaxCredit, setCalcTaxCredit] = useState<number>();
 
   const [note, setNote] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState("");
+  // const [date, setDate] = useState(new Date());
   const [file, setFile] = useState("");
   const [client, setClient] = useState("");
 
-  const [src, setSrc] = useState('noimage.png');
+  const [src, setSrc] = useState("");
   const [photoURL, setPhotoURL] = useState<File | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,6 +54,9 @@ const Mypage: NextPage = () => {
 
   const [active2, setActive2] = useState<boolean>(true);
   const [tax2, setTax2] = useState('10%')
+
+  const [disable, setDisable] = useState<boolean>(true);
+
 
 
   //Recoilのログイン状態
@@ -92,19 +100,14 @@ const Mypage: NextPage = () => {
   const changePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(e.target.value)
     if (active === true) {
-      // setCalcPrice(Math.floor(Number(e.target.value) * 0.1 + Number(e.target.value)))
       setCalcTaxDebit(Math.floor(Number(e.target.value) * 0.1))
-
     } else {
-      // setCalcPrice(Number(e.target.value))
       setCalcTaxDebit(0)
     }
 
     if (active2 === true) {
-      // setCalcPriceCredit(Math.floor(Number(e.target.value) * 0.1 + Number(e.target.value)))
       setCalcTaxCredit(0)
     } else {
-      // setCalcPriceCredit(Number(e.target.value))
       setCalcTaxCredit(Math.floor(Number(e.target.value) * 0.1))
     }
   }
@@ -115,13 +118,15 @@ const Mypage: NextPage = () => {
       const fileObject = e.target.files[0];
       setPhotoURL(fileObject)
       setSrc(window.URL.createObjectURL(fileObject));
-      // console.log(e.target.files[0].name)
     }
-    // setPhotoURL(e.target.files[0].name);
   }
 
+  const onDeleteClick = () => {
+    setPhotoURL(null)
+    setSrc("")
+  }
 
-  //仮登録
+  //登録
   const onClick = async () => {
 
     if (user) {
@@ -200,6 +205,7 @@ const Mypage: NextPage = () => {
       }
 
       router.push("/account")
+
     }
   }
 
@@ -209,7 +215,6 @@ const Mypage: NextPage = () => {
 
   useEffect(() => {
     if (active === true) {
-      // setCalcPriceDebit(calcPriceDebit)
       setCalcPriceDebit(Math.floor(Number(calcPriceDebit) * 0.1 + Number(calcPriceDebit)))
     } else {
       // setCalcPriceDebit(calcPriceDebit / (1 +))
@@ -220,7 +225,6 @@ const Mypage: NextPage = () => {
     }
 
     if (active2 === true) {
-      // setCalcPriceDebit(calcPriceDebit)
       setCalcPriceCredit(Math.floor(Number(calcPriceCredit) * 0.1 + Number(calcPriceCredit)))
     } else {
       // setCalcPriceDebit(calcPriceDebit / (1 +))
@@ -233,14 +237,26 @@ const Mypage: NextPage = () => {
 
   }, [active, active2]);
 
+  useEffect(() => {
+
+    if (date !== "" && client !== "" && accountDebit !== "" && accountCredit !== "" && price !== "" && type === '収入' || type === '支出') {
+      setDisable(false)
+      console.log('a-false')
+    } else {
+      setDisable(true)
+      console.log('a-true')
+    }
+
+  }, [date, type, client, accountDebit, accountCredit, price]);
+
   return (
     <>
       <Layout>
         <Box w='100%'>
           <HeadSecond>新しい仕訳を登録</HeadSecond>
           <ContainerBox>
-            <Flex marginBottom='30px'>
-              <Box marginRight='25px'>
+            <Flex marginBottom='30px' flexWrap={{ base: "wrap", md: "nowrap" }}>
+              <Box w={{ base: "40%", md: "auto" }} marginRight='25px' marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
                   日付
                 </SubText>
@@ -254,7 +270,7 @@ const Mypage: NextPage = () => {
                   onChange={e => setDate(e.target.value)}
                 />
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "39%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
                   収支
                 </SubText>
@@ -266,12 +282,12 @@ const Mypage: NextPage = () => {
                   value={type}
                   onChange={e => setType(e.target.value)}
                 >
-                  <option >選択してください</option>
+                  <option value='null'>選択してください</option>
                   <option value='収入'>収入</option>
                   <option value='支出'>支出</option>
                 </Select>
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }} marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
                   取引先
                 </SubText>
@@ -285,7 +301,7 @@ const Mypage: NextPage = () => {
                   onChange={e => setClient(e.target.value)}
                 />
               </Box>
-              <Box marginRight='25px'>
+              <Box w={{ base: "26%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
                   損益
                 </SubText>
@@ -301,7 +317,7 @@ const Mypage: NextPage = () => {
                   <option value='false'>計算しない</option>
                 </Select>
               </Box>
-              <Box>
+              <Box w={{ base: "20%", md: "auto" }}>
                 <SubText marginBottom='10px'>
                   決済
                 </SubText>
@@ -319,8 +335,8 @@ const Mypage: NextPage = () => {
               </Box>
             </Flex>
 
-            <Flex justify='space-between' align='flex-start' marginBottom='30px'>
-              <Box marginRight='25px'>
+            <Flex justify='space-between' align='flex-start' flexWrap={{ base: "wrap", md: "nowrap" }} marginBottom='30px'>
+              <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }}>
                 <SubText marginBottom='10px'>
                   借方
                 </SubText>
@@ -406,7 +422,7 @@ const Mypage: NextPage = () => {
                 </Flex>
               </Box>
 
-              <Box>
+              <Box w={{ base: "100%", md: "auto" }} >
                 <SubText marginBottom='10px'>
                   貸方
                 </SubText>
@@ -497,17 +513,7 @@ const Mypage: NextPage = () => {
               <SubText marginBottom='10px'>
                 書類データ
               </SubText>
-              {/* <Input
-                type='file'
-                // value='ファイルを選択'
-                // borderColor='#AAE2CF'
-                cursor='pointer'
-                value={file}
-                onChange={e => setFile(e.target.value)}
-              /> */}
-
-              <Flex>
-                {/* <Box ref={fileName}></Box> */}
+              <Flex flexWrap={{ base: "wrap", md: "nowrap" }}>
                 <Input
                   id="image"
                   ref={inputRef}
@@ -517,14 +523,28 @@ const Mypage: NextPage = () => {
                   accept="image/png,image/jpeg,image/gif/,application/pdf"
                   onChange={handleChangePhotoURL}
                 />
-                <Button
-                  onClick={onButtonClick}
-                  w='330px'
-                  borderColor='#AAE2CF'
-                >
-                  ファイルを選択
-                </Button>
-                <Image src={src} alt="" display='block' w='48%' h='auto' marginLeft='auto' objectFit='cover' />
+                <Box marginBottom={{ base: "25px", md: "0" }}>
+                  <Button
+                    onClick={onButtonClick}
+                    display='block'
+                    w='330px'
+                    borderColor='#AAE2CF'
+                  >
+                    ファイルを選択
+                  </Button>
+                  {src &&
+                    <Button
+                      onClick={onDeleteClick}
+                      w='250px'
+                      borderColor='#AAE2CF'
+                      display='block'
+                      marginTop='35px'
+                    >
+                      削除
+                    </Button>
+                  }
+                </Box>
+                <Image w={{ base: "100%", md: "48%" }} src={src} alt="" display='block' h='auto' marginLeft='auto' objectFit='cover' />
               </Flex>
             </Box>
 
@@ -545,11 +565,14 @@ const Mypage: NextPage = () => {
               <Link href={'/account'}>
                 <Buttonsecondary>キャンセル</Buttonsecondary>
               </Link>
-              <ButtonPrimary onClick={onClick}>登録</ButtonPrimary>
+              {/* disable */}
+              <ButtonPrimary disabled={disable} onClick={onClick}>登録</ButtonPrimary>
             </Box>
 
           </ContainerBox>
         </Box>
+
+
       </Layout>
     </>
   )

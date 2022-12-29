@@ -16,7 +16,7 @@ import {
   Image,
 } from '@chakra-ui/react'
 import { useAuth } from "../../src/atom";
-import { collection, getFirestore, limit, onSnapshot, orderBy, query, startAfter, startAt, where } from "firebase/firestore";
+import { collection, getDocs, getFirestore, limit, onSnapshot, orderBy, query, startAfter, startAt, where } from "firebase/firestore";
 import { format } from 'date-fns'
 import ReactPaginate from 'react-paginate';
 
@@ -41,6 +41,9 @@ const Mypage: NextPage = () => {
   const [details, setDetails] = useState<any>([]);
   // const [monthDetails, setMonthDetails] = useState<any>([]);
   // console.log(details)
+
+  const [detailstest, setDetailstest] = useState<any>([]);
+
   const [modalDetail, setModalDetail] = useState<any>({});
   // console.log(monthDetails.length)
 
@@ -101,31 +104,28 @@ const Mypage: NextPage = () => {
 
       if (user) {
         //ユーザーデータ読み込み
-        const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
-        const qSuma = query(usersCollectionRef,
-          where('yearAndMonth', '==', year.toString()),
-          // where('type', '==', type),
-          orderBy('date', 'desc'),
-          // startAt(currentPage)
-        );
+        const usersCollectionRef = collection(db, 'users', user.uid, 'details');
+        // const qSuma = query(usersCollectionRef,where('yearAndMonth', '==', year.toString()),orderBy('date', 'desc'),);
 
-        //今月の内容全て読み込み
-        const qSum = query(usersCollectionRef,
-          where('yearAndMonth', '==', year.toString()),
-          // where('type', '==', type),
-          orderBy('date', 'desc'),
-          // limit(pageSize),
-          // startAt(currentPage)
-        );
-        await onSnapshot(
-          qSum, (snapshot) => setDetails(snapshot.docs.map((doc) => (
-            { ...doc.data(), id: doc.id }
-          ))), //取得時にidをdoc.idにする
-          (error) => {
-            console.log(error.message);
-            console.log('err');
-          },
-        );
+        // //指定年月の内容全て読み込み
+        //onSnapshot
+        // const qSum = query(usersCollectionRef, where('yearAndMonth', '==', year.toString()), orderBy('date', 'desc'),);
+        // onSnapshot(
+        //   qSum, (snapshot) => setDetails(snapshot.docs.map((doc) => (
+        //     { ...doc.data(), id: doc.id }
+        //   ))), //取得時にidをdoc.idにする
+        //   (error) => {
+        //     console.log(error.message);
+        //     console.log('err');
+        //   },
+        // );
+
+        //getDocs
+        const ref = query(collection(db, 'users', user.uid, 'details'), where('yearAndMonth', '==', year.toString()), orderBy('date', 'desc'),);
+        const docSnapw = await getDocs(ref);
+        setDetails(docSnapw.docs.map((doc) => (
+          { ...doc.data(), id: doc.id }
+        )));
 
       }
 
@@ -222,7 +222,7 @@ const Mypage: NextPage = () => {
                               )
                               }
                               {detail.payment === 'true' && (
-                                <Td color='#00536C' fontWeight='600' ></Td>
+                                <Td color='#00536C' fontWeight='600' w='1em' h='1em'></Td>
                               )}
                               {detail.payment === 'false' && (
                                 <Td className={styles.table_payment} color='#E53E3E' fontWeight='600' ><Image src="/check.svg" w='1em' h='1em' alt="" /></Td>
@@ -376,36 +376,36 @@ const Mypage: NextPage = () => {
       </Layout >
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent maxW='1024px' marginTop='55px'>
+        <ModalContent w={{ base: "95%", md: "auto" }} marginLeft={{ base: "2.5%", md: "auto" }} marginRight={{ base: "2.5%", md: "auto" }} maxW='1024px' marginTop='55px'>
           <ModalHeader>仕訳詳細</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <ContainerBox>
-              <Flex marginBottom='30px'>
-                <Box marginRight='25px'>
+              <Flex marginBottom='30px' flexWrap={{ base: "wrap", md: "nowrap" }}>
+                <Box w={{ base: "40%", md: "auto" }} marginBottom={{ base: "25px", md: "0" }} marginRight='25px'>
                   <SubText marginBottom='10px'>
                     日付
                   </SubText>
-                  <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.date && format(modalDetail.date.toDate(), 'yyyy年M月d日')}</Text>
+                  <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.date && format(modalDetail.date.toDate(), 'yyyy年M月d日')}</Text>
                 </Box>
-                <Box marginRight='25px'>
+                <Box w={{ base: "39%", md: "auto" }} marginRight='25px'>
                   <SubText marginBottom='10px'>
                     収支
                   </SubText>
-                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.type}</Text>
+                  <Text minW={{ base: "auto", md: "75px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.type}</Text>
                 </Box>
-                <Box marginRight='25px'>
+                <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }} marginBottom={{ base: "25px", md: "0" }}>
                   <SubText marginBottom='10px'>
                     取引先
                   </SubText>
-                  <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.client}</Text>
+                  <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.client}</Text>
                 </Box>
-                <Box marginRight='25px'>
+                <Box w={{ base: "26%", md: "auto" }} marginRight='25px'>
                   <SubText marginBottom='10px'>
                     損益
                   </SubText>
-                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
-                    {modalDetail.pl === true
+                  <Text minW={{ base: "auto", md: "75px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
+                    {modalDetail.pl === "true"
                       ?
                       '計算する'
                       :
@@ -413,12 +413,12 @@ const Mypage: NextPage = () => {
                     }
                   </Text>
                 </Box>
-                <Box>
+                <Box w={{ base: "20%", md: "auto" }} >
                   <SubText marginBottom='10px'>
                     決済
                   </SubText>
-                  <Text minW='75px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
-                    {modalDetail.payment === true
+                  <Text minW={{ base: "auto", md: "75px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>
+                    {modalDetail.payment === "true"
                       ?
                       '完了'
                       :
@@ -428,14 +428,14 @@ const Mypage: NextPage = () => {
                 </Box>
               </Flex>
 
-              <Flex justify='space-between' align='flex-start' marginBottom='30px'>
-                <Box marginRight='25px'>
+              <Flex justify='space-between' align='flex-start' flexWrap={{ base: "wrap", md: "nowrap" }} marginBottom='30px'>
+                <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }}>
                   <SubText marginBottom='10px'>
                     借方
                   </SubText>
                   <Flex marginBottom='15px'>
-                    <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px' marginRight='25px'>{modalDetail.accountDebit}</Text>
-                    <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.price}</Text>
+                    <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px' marginRight='25px'>{modalDetail.accountDebit}</Text>
+                    <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.price}</Text>
 
                   </Flex>
                   <Flex justifyContent='space-between'>
@@ -475,13 +475,13 @@ const Mypage: NextPage = () => {
                   </Flex>
                 </Box>
 
-                <Box>
+                <Box w={{ base: "100%", md: "auto" }}>
                   <SubText marginBottom='10px'>
                     貸方
                   </SubText>
                   <Flex marginBottom='15px'>
-                    <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px' marginRight='25px'>{modalDetail.accountCredit}</Text>
-                    <Text minW='210px' minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.price}</Text>
+                    <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px' marginRight='25px'>{modalDetail.accountCredit}</Text>
+                    <Text minW={{ base: "auto", md: "210px" }} minH='38px' fontSize='15px' color='#65748A' padding='8px 16px' border='#AAE2CF 1px solid' borderRadius='5px'>{modalDetail.price}</Text>
                   </Flex>
                   <Flex justifyContent='space-between'>
                     <Flex align='center'>
@@ -525,7 +525,7 @@ const Mypage: NextPage = () => {
                 <SubText marginBottom='10px'>
                   書類データ
                 </SubText>
-                <Image src={modalDetail.file} alt="" display='block' w='60%' h='auto' objectFit='cover' />
+                <Image w={{ base: "100%", md: "60%" }} src={modalDetail.file} alt="" display='block' h='auto' objectFit='cover' />
               </Box>
 
 

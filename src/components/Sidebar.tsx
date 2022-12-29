@@ -10,10 +10,19 @@ import {
   Stack
 } from '@chakra-ui/react'
 
+// const breakpoints = {
+//   sm: '320px',
+//   md: '768px',
+//   lg: '960px',
+//   xl: '1200px',
+//   '2xl': '1536px',
+// }
+
+
 export const Sidebar = () => {
   return (
     <>
-      <Box backgroundColor='#3D4A4F' w='135px' h='100%' marginTop='65px' position='fixed' z-index='1000'>
+      <Box display={{ base: "none", md: "block" }} backgroundColor='#3D4A4F' w='135px' h='100%' marginTop='65px' position='fixed' zIndex='1000'>
         <nav>
           <UnorderedList listStyleType='none' m='35px 0 0'>
             <Stack spacing='35px'>
@@ -53,7 +62,7 @@ export const Sidebar = () => {
                 <Link href={'/report'}>
                   <Flex align='center' justify='center'>
                     <Image src="/icon-report.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>レポート</Text>
+                    <Text color='white' marginLeft='10px' fontSize='14px'>損益レポート</Text>
                   </Flex>
                 </Link>
               </ListItem>

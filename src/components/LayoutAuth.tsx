@@ -13,7 +13,7 @@ export const LayoutAuth: FC<Props> = ({ children }) => {
     <>
       <Header />
       <main >
-        <Flex minH='85vh' justify='center'>
+        <Flex w={{ base: "95%", md: "auto" }} margin={{ base: "0 auto", md: "auto" }} minH='85vh' justify='center'>
           {children}
         </Flex>
       </main>

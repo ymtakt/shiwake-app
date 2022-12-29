@@ -61,8 +61,6 @@ const Edit: NextPage = () => {
   };
   const handleEdit = () => {
 
-
-
     updateProfile(auth.currentUser as any, {
       displayName: displayName,
     }).then(() => {
@@ -94,11 +92,12 @@ const Edit: NextPage = () => {
       }
     }).catch((error) => {
       console.log(error)
+    }).finally(() => {
+      // setDisplayName("");
+      // setPhotoURL(null);
+      router.push("/mypage")
+      // window.location.href = '/mypage';
     });
-
-    setDisplayName("");
-    setPhotoURL(null);
-    router.push("/mypage")
   }
 
   useEffect(() => {
@@ -136,9 +135,11 @@ const Edit: NextPage = () => {
             <ContainerBox>
               <Flex align='flex-start' justify='space-between' marginBottom='45px'>
                 <Box>
-                  {/* <Image src={photoURL} alt="" display='block' w='85px' h='85px' borderRadius='50%' m='0 auto 25px' objectFit='cover' /> */}
-                  {user !== null &&
+                  {/* {user !== null ? */}
+                  {src ?
                     <Image src={src} alt="" display='block' w='85px' h='85px' borderRadius='50%' m='0 auto 25px' objectFit='cover' />
+                    :
+                    <Image src='/profire-default.svg' alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
                   }
                   <Input
                     id="image"
@@ -170,19 +171,6 @@ const Edit: NextPage = () => {
                       onChange={handleChangeDisplayName}
                     />
                   </Box>
-                  {/* <Box>
-                    <SubText marginBottom='10px'>
-                      メールアドレス
-                    </SubText>
-                    <Input
-                      type='email'
-                      value='hoge@hoge.com'
-                      w='330px'
-                      borderColor='#AAE2CF'
-                      value={email}
-                      onChange={handleChangeEmail}
-                    />
-                  </Box> */}
                 </Box>
               </Flex>
               <Box textAlign='right'>

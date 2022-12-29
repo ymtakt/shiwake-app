@@ -99,6 +99,13 @@ const Signup: NextPage = () => {
               });
             })
           });
+        } else {
+          setDoc(doc(db, "users", uid), {
+            displayName: displayName,
+            name: 'user',
+            photoURL: null,
+            uid
+          });
         }
 
       })
@@ -126,10 +133,10 @@ const Signup: NextPage = () => {
   return (
     <>
       <LayoutAuth>
-        <Box display='flex' justifyContent='center' alignItems='center'>
-          <Box>
+        <Box w={{ base: "100%", md: "auto" }} display='flex' justifyContent='center' alignItems='center'>
+          <Box w={{ base: "100%", md: "auto" }} >
             <h1 style={{ textAlign: 'center', fontSize: '28px', fontWeight: 'bold', marginBottom: '20px' }}>新規登録</h1>
-            <Box p='60px' bg='White'>
+            <Box p={{ base: "25px", md: "60px" }} bg='White'>
               <Stack marginBottom='45px' spacing='20px'>
                 <Box>
                   {/* <Box ref={fileName}></Box> */}
@@ -145,7 +152,7 @@ const Signup: NextPage = () => {
                   />
                   <Button
                     onClick={onButtonClick}
-                    w='330px'
+                    w={{ base: "100%", md: "330px" }}
                     borderColor='#AAE2CF'
                   >
                     ファイルを選択
@@ -156,14 +163,14 @@ const Signup: NextPage = () => {
                   placeholder='ユーザー名'
                   value={displayName}
                   onChange={handleChangeDisplayName}
-                  w='330px'
+                  w={{ base: "100%", md: "330px" }}
                   borderColor='#AAE2CF' />
                 <Input
                   type='email'
                   placeholder='メールアドレス'
                   value={email}
                   onChange={handleChangeEmail}
-                  w='330px'
+                  w={{ base: "100%", md: "330px" }}
                   borderColor='#AAE2CF' />
                 <InputGroup size='md'>
                   <Input

@@ -1,7 +1,5 @@
-import { addYears, format, subYears } from "date-fns";
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
-import Link from "next/link";
 import { Box, Flex, TableContainer, Table, Thead, Tbody, Th, Td, Tr } from '@chakra-ui/react';
 import {
   Chart as ChartJS,
@@ -13,18 +11,16 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
+import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+
+import { useAuth } from "../../src/atom";
+import { app } from "../../src/firebase";
 
 import { Layout } from '../../src/components/Layout'
 import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 
 import report from '../../styles/Report.module.scss';
-import { useAuth } from "../../src/atom";
-import { collection, doc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { app } from "../../src/firebase";
-
+import { useReport } from "../../src/useReport";
 
 ChartJS.register(
   CategoryScale,
@@ -37,252 +33,18 @@ ChartJS.register(
 
 
 const Year: NextPage = () => {
-
-  //年のステート
-  const [nowYear, setNowYear] = useState<any>(new Date());
-  const year = Number(format(nowYear, 'yyyy'));
-
   //データのステート
   const [userData, setUserData] = useState<any>();
-  //今月の内容全て
-  const [detailsYear, setDetailsYear] = useState<any>([]);
-
-  //Recoilのログイン状態
+  // Recoilのログイン状態
   const user = useAuth();
-  // console.log(user)
-
-  //データベース接続
+  // データベース接続
   const db = getFirestore(app);
 
+  const {
+    plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec,
+    minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec,
+    onclickLastYear, onclickNextYear, year } = useReport();
 
-  //収入配列
-  const incomeNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
-    return n.type === '収入' && n.year === year && n.pl === 'true';
-  });
-  //支出配列
-  const spendingNum = detailsYear.filter((n: { type: string; year: number; pl: string; }) => {
-    return n.type === '支出' && n.year === year && n.pl === 'true';
-  });
-
-  //年月配列
-  const JanuaryPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 1;
-  });
-  const JanuaryMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 1;
-  });
-
-  const FebruaryPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 2;
-  });
-  const FebruaryMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 2;
-  });
-
-  const MarchPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 3;
-  });
-  const MarchMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 3;
-  });
-
-  const AprilPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 4;
-  });
-  const AprilMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 4;
-  });
-
-  const MayPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 5;
-  });
-  const MayMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 5;
-  });
-
-  const JunePlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 6;
-  });
-  const JuneMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 6;
-  });
-
-  const JulyPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 7;
-  });
-  const JulyMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 7;
-  });
-
-  const AugustPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 8;
-  });
-  const AugustMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 8;
-  });
-
-  const SeptemberPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 9;
-  });
-  const SeptemberMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 9;
-  });
-
-  const OctoberPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 10;
-  });
-  const OctoberMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 10;
-  });
-
-  const NovemberPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 11;
-  });
-  const NovemberMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 11;
-  });
-
-  const DecemberPlus = incomeNum.filter((n: { month: number; }) => {
-    return n.month === 12;
-  });
-  const DecemberMinus = spendingNum.filter((n: { month: number; }) => {
-    return n.month === 12;
-  });
-
-
-
-  const plusJan = JanuaryPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusJan = JanuaryMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusFeb = FebruaryPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusFeb = FebruaryMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusMar = MarchPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusMar = MarchMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusApr = AprilPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusApr = AprilMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusMay = MayPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusMay = MayMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusJun = JunePlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusJun = JuneMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusJul = JulyPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusJul = JulyMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusAug = AugustPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusAug = AugustMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusSep = SeptemberPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusSep = SeptemberMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusOct = OctoberPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusOct = OctoberMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusNov = NovemberPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusNov = NovemberMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-  const plusDec = DecemberPlus.reduce((sum: any, X: { price: any; }) => {
-    const plus = sum + X.price;
-    return Number(plus);
-  }, 0)
-
-  const minusDec = DecemberMinus.reduce((sum: any, X: { price: any; }) => {
-    const minus = sum + X.price;
-    return Number(minus);
-  }, 0)
-
-
-  //年変更クリックイベント
-  const onclickLastYear = () => {
-    const lastYear = subYears(nowYear, 1);
-    setNowYear(lastYear)
-  }
-  const onclickNextYear = () => {
-    const nextYear = addYears(nowYear, 1);
-    setNowYear(nextYear)
-  }
-
-  //グラフ用
   const options = {
     responsive: true,
     plugins: {
@@ -300,13 +62,11 @@ const Year: NextPage = () => {
     datasets: [
       {
         label: '収入',
-        // data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
         data: [plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec],
         backgroundColor: '#59A0E6',
       },
       {
         label: '支出',
-        // data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
         data: [minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec],
         backgroundColor: '#E67A59',
       },
@@ -317,24 +77,14 @@ const Year: NextPage = () => {
   useEffect(() => {
     (async () => {
       if (user) {
-
         //ユーザー読み込み
         await onSnapshot(doc(db, "users", user.uid), (doc) => {
           setUserData(doc.data())
         });
-
-        //今月の内容全て読み込み
-        //getDocs
-        const ref = query(collection(db, 'users', user.uid, 'details'), where('year', '==', year), orderBy('date', 'desc'));
-        const docSnapw = await getDocs(ref);
-        setDetailsYear(docSnapw.docs.map((doc) => (
-          { ...doc.data(), id: doc.id }
-        )));
-
-
       }
     })()
-  }, [user, nowYear]);
+    // }, [user, nowYear]);
+  }, []);
 
   return (
     <>
@@ -378,49 +128,48 @@ const Year: NextPage = () => {
                 <Tbody>
                   <Tr>
                     <Td>収入</Td>
-                    <Td>+{plusJan}円</Td>
-                    <Td>+{plusFeb}円</Td>
-                    <Td>+{plusMar}円</Td>
-                    <Td>+{plusApr}円</Td>
-                    <Td>+{plusMay}円</Td>
-                    <Td>+{plusJun}円</Td>
-                    <Td>+{plusJul}円</Td>
-                    <Td>+{plusAug}円</Td>
-                    <Td>+{plusSep}円</Td>
-                    <Td>+{plusOct}円</Td>
-                    <Td>+{plusNov}円</Td>
-                    <Td>+{plusDec}円</Td>
-
+                    <Td>+{Number(plusJan).toLocaleString()}円</Td>
+                    <Td>+{Number(plusFeb).toLocaleString()}円</Td>
+                    <Td>+{Number(plusMar).toLocaleString()}円</Td>
+                    <Td>+{Number(plusApr).toLocaleString()}円</Td>
+                    <Td>+{Number(plusMay).toLocaleString()}円</Td>
+                    <Td>+{Number(plusJun).toLocaleString()}円</Td>
+                    <Td>+{Number(plusJul).toLocaleString()}円</Td>
+                    <Td>+{Number(plusAug).toLocaleString()}円</Td>
+                    <Td>+{Number(plusSep).toLocaleString()}円</Td>
+                    <Td>+{Number(plusOct).toLocaleString()}円</Td>
+                    <Td>+{Number(plusNov).toLocaleString()}円</Td>
+                    <Td>+{Number(plusDec).toLocaleString()}円</Td>
                   </Tr>
                   <Tr>
                     <Td>支出</Td>
-                    <Td>-{minusJan}円</Td>
-                    <Td>-{minusFeb}円</Td>
-                    <Td>-{minusMar}円</Td>
-                    <Td>-{minusApr}円</Td>
-                    <Td>-{minusMay}円</Td>
-                    <Td>-{minusJun}円</Td>
-                    <Td>-{minusJul}円</Td>
-                    <Td>-{minusAug}円</Td>
-                    <Td>-{minusSep}円</Td>
-                    <Td>-{minusOct}円</Td>
-                    <Td>-{minusNov}円</Td>
-                    <Td>-{minusDec}円</Td>
+                    <Td>-{Number(minusJan).toLocaleString()}円</Td>
+                    <Td>-{Number(minusFeb).toLocaleString()}円</Td>
+                    <Td>-{Number(minusMar).toLocaleString()}円</Td>
+                    <Td>-{Number(minusApr).toLocaleString()}円</Td>
+                    <Td>-{Number(minusMay).toLocaleString()}円</Td>
+                    <Td>-{Number(minusJun).toLocaleString()}円</Td>
+                    <Td>-{Number(minusJul).toLocaleString()}円</Td>
+                    <Td>-{Number(minusAug).toLocaleString()}円</Td>
+                    <Td>-{Number(minusSep).toLocaleString()}円</Td>
+                    <Td>-{Number(minusOct).toLocaleString()}円</Td>
+                    <Td>-{Number(minusNov).toLocaleString()}円</Td>
+                    <Td>-{Number(minusDec).toLocaleString()}円</Td>
                   </Tr>
                   <Tr>
                     <Td>合計</Td>
-                    <Td>{plusJan - minusJan}円</Td>
-                    <Td>{plusFeb - minusFeb}円</Td>
-                    <Td>{plusMar - minusMar}円</Td>
-                    <Td>{plusApr - minusApr}円</Td>
-                    <Td>{plusMay - minusMay}円</Td>
-                    <Td>{plusJun - minusJun}円</Td>
-                    <Td>{plusJul - minusJul}円</Td>
-                    <Td>{plusAug - minusAug}円</Td>
-                    <Td>{plusSep - minusSep}円</Td>
-                    <Td>{plusOct - minusOct}円</Td>
-                    <Td>{plusNov - minusNov}円</Td>
-                    <Td>{plusDec - minusDec}円</Td>
+                    <Td>{Number(plusJan - minusJan).toLocaleString()}円</Td>
+                    <Td>{Number(plusFeb - minusFeb).toLocaleString()}円</Td>
+                    <Td>{Number(plusMar - minusMar).toLocaleString()}円</Td>
+                    <Td>{Number(plusApr - minusApr).toLocaleString()}円</Td>
+                    <Td>{Number(plusMay - minusMay).toLocaleString()}円</Td>
+                    <Td>{Number(plusJun - minusJun).toLocaleString()}円</Td>
+                    <Td>{Number(plusJul - minusJul).toLocaleString()}円</Td>
+                    <Td>{Number(plusAug - minusAug).toLocaleString()}円</Td>
+                    <Td>{Number(plusSep - minusSep).toLocaleString()}円</Td>
+                    <Td>{Number(plusOct - minusOct).toLocaleString()}円</Td>
+                    <Td>{Number(plusNov - minusNov).toLocaleString()}円</Td>
+                    <Td>{Number(plusDec - minusDec).toLocaleString()}円</Td>
                   </Tr>
                 </Tbody>
 

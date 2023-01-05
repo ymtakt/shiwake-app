@@ -10,13 +10,11 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Input,
   Text,
-  Textarea,
   Image,
 } from '@chakra-ui/react'
 import { useAuth } from "../../src/atom";
-import { collection, getDocs, getFirestore, limit, onSnapshot, orderBy, query, startAfter, startAt, where } from "firebase/firestore";
+import { collection, getDocs, getFirestore, orderBy, query, where } from "firebase/firestore";
 import { format } from 'date-fns'
 import ReactPaginate from 'react-paginate';
 
@@ -35,24 +33,15 @@ import styles from '../../styles/Table.module.scss';
 
 const Mypage: NextPage = () => {
 
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   //データのステート
   const [details, setDetails] = useState<any>([]);
-  // const [monthDetails, setMonthDetails] = useState<any>([]);
-  // console.log(details)
-
-  const [detailstest, setDetailstest] = useState<any>([]);
-
   const [modalDetail, setModalDetail] = useState<any>({});
-  // console.log(monthDetails.length)
 
   //Recoilのログイン状態
   const user = useAuth();
-
   // //データベース接続
   const db = getFirestore(app);
-
   //日付→今月
   const today = new Date();
   const thisMonth = today.getMonth() + 1;
@@ -105,33 +94,17 @@ const Mypage: NextPage = () => {
       if (user) {
         //ユーザーデータ読み込み
         const usersCollectionRef = collection(db, 'users', user.uid, 'details');
-        // const qSuma = query(usersCollectionRef,where('yearAndMonth', '==', year.toString()),orderBy('date', 'desc'),);
-
-        // //指定年月の内容全て読み込み
-        //onSnapshot
-        // const qSum = query(usersCollectionRef, where('yearAndMonth', '==', year.toString()), orderBy('date', 'desc'),);
-        // onSnapshot(
-        //   qSum, (snapshot) => setDetails(snapshot.docs.map((doc) => (
-        //     { ...doc.data(), id: doc.id }
-        //   ))), //取得時にidをdoc.idにする
-        //   (error) => {
-        //     console.log(error.message);
-        //     console.log('err');
-        //   },
-        // );
-
         //getDocs
         const ref = query(collection(db, 'users', user.uid, 'details'), where('yearAndMonth', '==', year.toString()), orderBy('date', 'desc'),);
         const docSnapw = await getDocs(ref);
         setDetails(docSnapw.docs.map((doc) => (
           { ...doc.data(), id: doc.id }
         )));
-
       }
 
     })()
 
-  }, [user, type, year]);
+  }, [user, type, year, details]);
 
   return (
     <>
@@ -173,7 +146,188 @@ const Mypage: NextPage = () => {
             </Flex>
 
             <Box marginBottom='45px'>
-              <TableContainer maxWidth='100%' whiteSpace='pre-wrap' className={styles.table}>
+              <Box display={{ base: "block", md: "none" }}>
+                {currentDetails.map((detail: any) => {
+                  const detailInfo = {
+                    id: detail.id,
+                    accountDebit: detail.accountDebit,
+                    accountCredit: detail.accountCredit,
+                    type: detail.type, pl: detail.pl,
+                    payment: detail.payment,
+                    price: detail.price,
+                    price2: detail.price2,
+                    priceTax: detail.priceTax,
+                    priceTax2: detail.priceTax2,
+                    date: format(detail.date.toDate(), 'yyyy-MM-dd'),
+                    client: detail.client,
+                    note: detail.note,
+                    file: detail.file,
+                    active: detail.active as boolean,
+                    active2: detail.active2 as boolean,
+                    tax: detail.tax,
+                    tax2: detail.tax2
+                  };
+                  if (type === 'all') {
+                    return (
+                      user !== null && (
+                        <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
+                          <Flex justifyContent='space-between'>
+                            <Box>
+                              <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
+                                借方：{detail.accountCredit}</Box>
+                              <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
+                            </Box>
+                            <Flex fontSize='14px'>
+                              <Box marginRight='25px'>
+                                {detail.type === '収入' && (
+                                  <Box color='#00536C' fontWeight='600'>{detail.type}</Box>
+                                )}
+                                {detail.type === '支出' && (
+                                  <Box color='#E53E3E' fontWeight='600'>{detail.type}</Box>
+                                )
+                                }
+                                {detail.payment === 'true' && (
+                                  <Box></Box>
+                                )}
+                                {detail.payment === 'false' && (
+                                  <Box color='#E53E3E' fontWeight='600'><Image src="/check.svg" w='1em' h='1em' alt="" /></Box>
+                                )
+                                }
+                              </Box>
+                              <Box fontSize='16px' fontWeight='600' marginTop='auto'> {
+                                detail.type === '収入' && (
+                                  <Box>+{Number(detail.price).toLocaleString()}円</Box>
+                                )
+                              }
+                                {
+                                  detail.type === '支出' && (
+                                    <Box>-{Number(detail.price).toLocaleString()}円</Box>
+                                  )
+                                }</Box>
+                            </Flex>
+                          </Flex>
+                          <Box textAlign='right'>
+                            <Button onClick={() => onOpenModal(detail)} display='inline-block' h='auto' p='8px 7px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>詳細</Button>
+                            <Link
+                              as={`/account/${detail.id}`}
+                              href={{ pathname: `/account/[id]`, query: detailInfo }}
+                            >
+                              <Button display='inline-block' h='auto' p='8px 7px' marginLeft='8px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>編集</Button>
+                            </Link>
+                          </Box>
+                        </Box>
+                      )
+                    )
+                  } else if (type === '収入') {
+                    return (
+                      user !== null && (
+                        '収入' === detail.type && (
+                          <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
+                            <Flex justifyContent='space-between'>
+                              <Box>
+                                <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
+                                  借方：{detail.accountCredit}</Box>
+                                <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
+                              </Box>
+                              <Flex fontSize='14px'>
+                                <Box marginRight='25px'>
+                                  {detail.type === '収入' && (
+                                    <Box color='#00536C' fontWeight='600'>{detail.type}</Box>
+                                  )}
+                                  {detail.type === '支出' && (
+                                    <Box color='#E53E3E' fontWeight='600'>{detail.type}</Box>
+                                  )
+                                  }
+                                  {detail.payment === 'true' && (
+                                    <Box></Box>
+                                  )}
+                                  {detail.payment === 'false' && (
+                                    <Box color='#E53E3E' fontWeight='600'><Image src="/check.svg" w='1em' h='1em' alt="" /></Box>
+                                  )
+                                  }
+                                </Box>
+                                <Box fontSize='16px' fontWeight='600' marginTop='auto'> {
+                                  detail.type === '収入' && (
+                                    <Box>+{Number(detail.price).toLocaleString()}円</Box>
+                                  )
+                                }
+                                  {
+                                    detail.type === '支出' && (
+                                      <Box>-{Number(detail.price).toLocaleString()}円</Box>
+                                    )
+                                  }</Box>
+                              </Flex>
+                            </Flex>
+                            <Box textAlign='right'>
+                              <Button onClick={() => onOpenModal(detail)} display='inline-block' h='auto' p='8px 7px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>詳細</Button>
+                              <Link
+                                as={`/account/${detail.id}`}
+                                href={{ pathname: `/account/[id]`, query: detailInfo }}
+                              >
+                                <Button display='inline-block' h='auto' p='8px 7px' marginLeft='8px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>編集</Button>
+                              </Link>
+                            </Box>
+                          </Box>
+                        )
+                      )
+                    )
+                  } else if (type === '支出') {
+                    return (
+                      user !== null && (
+                        '支出' === detail.type && (
+                          <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
+                            <Flex justifyContent='space-between'>
+                              <Box>
+                                <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
+                                  借方：{detail.accountCredit}</Box>
+                                <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
+                              </Box>
+                              <Flex fontSize='14px'>
+                                <Box marginRight='25px'>
+                                  {detail.type === '収入' && (
+                                    <Box color='#00536C' fontWeight='600'>{detail.type}</Box>
+                                  )}
+                                  {detail.type === '支出' && (
+                                    <Box color='#E53E3E' fontWeight='600'>{detail.type}</Box>
+                                  )
+                                  }
+                                  {detail.payment === 'true' && (
+                                    <Box></Box>
+                                  )}
+                                  {detail.payment === 'false' && (
+                                    <Box color='#E53E3E' fontWeight='600'><Image src="/check.svg" w='1em' h='1em' alt="" /></Box>
+                                  )
+                                  }
+                                </Box>
+                                <Box fontSize='16px' fontWeight='600' marginTop='auto'> {
+                                  detail.type === '収入' && (
+                                    <Box>+{Number(detail.price).toLocaleString()}円</Box>
+                                  )
+                                }
+                                  {
+                                    detail.type === '支出' && (
+                                      <Box>-{Number(detail.price).toLocaleString()}円</Box>
+                                    )
+                                  }</Box>
+                              </Flex>
+                            </Flex>
+                            <Box textAlign='right'>
+                              <Button onClick={() => onOpenModal(detail)} display='inline-block' h='auto' p='8px 7px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>詳細</Button>
+                              <Link
+                                as={`/account/${detail.id}`}
+                                href={{ pathname: `/account/[id]`, query: detailInfo }}
+                              >
+                                <Button display='inline-block' h='auto' p='8px 7px' marginLeft='8px' backgroundColor='#3AA796' color='white' fontSize='12px' textAlign='center'>編集</Button>
+                              </Link>
+                            </Box>
+                          </Box>
+                        )
+                      )
+                    )
+                  }
+                })}
+              </Box>
+              <TableContainer display={{ base: "none", md: "block" }} maxWidth='100%' whiteSpace='pre-wrap' className={styles.table}>
                 <Table variant='simple'>
                   <Thead>
                     <Tr>
@@ -200,7 +354,7 @@ const Mypage: NextPage = () => {
                         price2: detail.price2,
                         priceTax: detail.priceTax,
                         priceTax2: detail.priceTax2,
-                        date: format(detail.date.toDate(), 'yyyy-M-d'),
+                        date: format(detail.date.toDate(), 'yyyy-MM-dd'),
                         client: detail.client,
                         note: detail.note,
                         file: detail.file,

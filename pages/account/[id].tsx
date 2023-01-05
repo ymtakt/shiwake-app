@@ -1,9 +1,8 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { Box, Text, Flex, Select, Input, Textarea, Button, Image } from '@chakra-ui/react'
 import { collection, deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore";
-import { getDownloadURL, getMetadata, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { Layout } from '../../src/components/Layout'
 import { ContainerBox } from "../../src/Parts/ContainerBox";
@@ -14,7 +13,6 @@ import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
 import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 import { useAuth } from "../../src/atom";
 import { app } from "../../src/firebase";
-import { format } from "date-fns";
 
 
 const Id = () => {
@@ -35,9 +33,8 @@ const Id = () => {
   const [note, setNote] = useState(router.query.note);
 
   const datea = router.query.date
-  // console.log(datea)
-  // format(datea.toDate(), 'yyyy-M-d')
   const [date, setDate] = useState(datea);
+  console.log(date)
 
   const [file, setFile] = useState(router.query.file);
   const [client, setClient] = useState(router.query.client);
@@ -51,9 +48,6 @@ const Id = () => {
 
 
   const [photoURL, setPhotoURL] = useState<any>(router.query.file);
-
-  const [photoURLa, setPhotoURLa] = useState("");
-
 
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -141,7 +135,6 @@ const Id = () => {
             setPhotoURL(url);
             console.log(url)
             // console.log(photoURL)
-
           });
         });
       }
@@ -187,16 +180,6 @@ const Id = () => {
       pl,
       payment
     });
-
-    /*  setAccountDebit("")
-        setAccountCredit("")
-        setType("")
-        setPrice("")
-        setNote("")
-        setFile("")
-        setClient("")
-        setPhotoURL("")
-        setTax("")*/
 
     router.push("/account");
     router.reload

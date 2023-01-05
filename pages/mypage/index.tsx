@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import Link from "next/link";
-import { Flex, Box, Image, Text, TableContainer, Table, Thead, Tbody, Th, Td, Tr, Button, color } from '@chakra-ui/react'
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, setDoc, startAt, Timestamp, where } from 'firebase/firestore'
+import { Flex, Box, Image, Text, TableContainer, Table, Thead, Tbody, Th, Td, Tr } from '@chakra-ui/react'
+import { collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore'
 import { format } from 'date-fns'
 
 import { Layout } from '../../src/components/Layout'
@@ -26,20 +26,14 @@ const Mypage: NextPage = () => {
   //今月の内容全て
   const [detailsMonth, setDetailsMonth] = useState<any>([]);
 
-  const [detailstest, setDetailstest] = useState<any>([]);
-  const [detailsMontha, setDetailsMontha] = useState<any>([]);
-
   //画像のステート
   const [src, setSrc] = useState<any>();
-  // const [src, setSrc] = useState("");
 
   //Recoilのログイン状態
   const user = useAuth();
-  // console.log(user)
 
   //データベース接続
-  const db = getFirestore();
-  // const db = getFirestore(app);
+  const db = getFirestore(app);
 
   //ルーティング
   const router = useRouter();
@@ -47,8 +41,6 @@ const Mypage: NextPage = () => {
   //日付→今月
   const today = new Date();
   const thisMonth = today.getMonth() + 1;
-
-  // const detailsMonth = format(details[0].timestamp.toDate(), 'M')
 
 
 
@@ -93,16 +85,6 @@ const Mypage: NextPage = () => {
         setDetails(docSnapw.docs.map((doc) => (
           { ...doc.data(), id: doc.id }
         )));
-        //onSnapshot
-        // const q = query(usersCollectionRef, where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
-        // onSnapshot(
-        //   q, (snapshot) => setDetails(snapshot.docs.map((doc) => (
-        //     { ...doc.data(), id: doc.id }
-        //   ))), //取得時にidをdoc.idにするget
-        //   (error) => {
-        //     console.log(error.message);
-        //   },
-        // );
 
         //今月の内容全て読み込み
         //getDocs
@@ -111,37 +93,23 @@ const Mypage: NextPage = () => {
         setDetailsMonth(docSnapwa.docs.map((doc) => (
           { ...doc.data(), id: doc.id }
         )));
-        //onSnapshot
-        // const qSum = query(usersCollectionRef, where("month", "==", thisMonth));
-        // onSnapshot(
-        //   qSum, (snapshot) => setDetailsMonth(snapshot.docs.map((doc) => (
-        //     { ...doc.data(), id: doc.id }
-        //   ))), //取得時にidをdoc.idにする
-        //   (error) => {
-        //     console.log(error.message);
-        //   },
-        // );
-
-
-        // const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
-        //   console.log("Current data: ", doc.data());
-        // });
 
         // ユーザーのphotoURLを取得
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log(docSnap.data())
+          // console.log(docSnap.data())
           setSrc(docSnap.data().photoURL);
         } else {
           console.log("No such document!");
         }
-        console.log(src)
+        // console.log(src)
         // return () => unsub()
       }
 
     })()
-  }, [user, src]);
+    // }, [user, src]);
+  }, []);
 
 
   return (
@@ -156,7 +124,6 @@ const Mypage: NextPage = () => {
                   収支合計
                 </SubText>
                 <Text textAlign='right' fontSize='30px' color='#162533'>
-
                   {/* 合計値(全てプラス) */}
                   {
                     monthAnser.toLocaleString()
@@ -215,10 +182,8 @@ const Mypage: NextPage = () => {
               <HeadSecond>アカウント情報</HeadSecond>
               <ContainerBox>
                 <Flex display={{ base: "block", md: "flex" }} align='flex-start' justify='space-between' marginBottom='45px'>
-                  {/* {user !== null ? <Image src="/profire-default.svg" alt="" w='85px' h='auto' /> : 'no image'} */}
                   {src ?
                     <Image src={src} alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
-                    // <Image src={src} alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
                     :
                     <Image src='/profire-default.svg' alt="" w='85px' h='85px' borderRadius='50%' objectFit='cover' />
                   }

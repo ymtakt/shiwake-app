@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   Box, Text, Flex, Select, Input, Textarea, Button, Image, Alert,
-
 } from '@chakra-ui/react'
 
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
@@ -25,7 +24,7 @@ import styles from '../../styles/Select.module.scss';
 const Mypage: NextPage = () => {
   const [accountDebit, setAccountDebit] = useState("");
   const [accountCredit, setAccountCredit] = useState("");
-  const [type, setType] = useState(null);
+  const [type, setType] = useState("");
   const [price, setPrice] = useState("");
 
   const [pl, setPl] = useState("true");
@@ -40,7 +39,7 @@ const Mypage: NextPage = () => {
 
   const [note, setNote] = useState("");
   const [date, setDate] = useState("");
-  // const [date, setDate] = useState(new Date());
+
   const [file, setFile] = useState("");
   const [client, setClient] = useState("");
 
@@ -72,10 +71,8 @@ const Mypage: NextPage = () => {
   const storage = getStorage();
 
   //今年
-  // const selectedMonth = date.getMonth() + 1;
   const today = new Date();
   const thisYear = today.getFullYear();
-  // console.log(thisYear);
 
   const classToggle = () => {
     setActive(!active)
@@ -142,13 +139,13 @@ const Mypage: NextPage = () => {
         const fileName = randomChar + "_" + photoURL.name;
 
         const mountainsRef = ref(storage, `${user.uid}/data/${fileName}`);
-        console.log(storage)
+        // console.log(storage)
         uploadBytes(mountainsRef, photoURL).then((url) => {
-          console.log(url);
+          // console.log(url);
           getDownloadURL(mountainsRef).then(url => {
-            console.log(url)
+            // console.log(url)
             setFile(url)
-            console.log(file)
+            // console.log(file)
 
             addDoc(collection(db, "users", user.uid, "details"), {
               accountDebit,
@@ -241,10 +238,10 @@ const Mypage: NextPage = () => {
 
     if (date !== "" && client !== "" && accountDebit !== "" && accountCredit !== "" && price !== "" && type === '収入' || type === '支出') {
       setDisable(false)
-      console.log('a-false')
+      // console.log('a-false')
     } else {
       setDisable(true)
-      console.log('a-true')
+      // console.log('a-true')
     }
 
   }, [date, type, client, accountDebit, accountCredit, price]);

@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { NextPage } from "next/types";
-import Link from "next/link";
-import { Flex, Box, Image, Text, Input, Button } from '@chakra-ui/react'
-import { getAuth, onAuthStateChanged, updateEmail, updateProfile } from "firebase/auth";
-import { collection, doc, getDoc, getFirestore, onSnapshot, setDoc } from "firebase/firestore";
+import { Flex, Box, Image, Input, Button } from '@chakra-ui/react'
+import { getAuth, updateProfile } from "firebase/auth";
+import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 import { Layout } from '../../src/components/Layout'
 import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
@@ -13,7 +12,7 @@ import { HeadSecond } from "../../src/Parts/HeadSecond";
 import { SubText } from "../../src/Parts/SubText";
 import { app } from "../../src/firebase";
 import { useRouter } from "next/router";
-import { useAuth, userState } from "../../src/atom";
+import { useAuth } from "../../src/atom";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 
@@ -29,17 +28,12 @@ const Edit: NextPage = () => {
 
   //Recoilのログイン状態
   const auth = getAuth(app);
-  // const userA = auth.currentUser as any;
-
   //データベース接続
   const db = getFirestore(app);
-
   //Recoilのログイン状態
   const user = useAuth();
-
   //ストレージ(画像用)
   const storage = getStorage();
-
   //ルーティング
   const router = useRouter();
 
@@ -93,10 +87,7 @@ const Edit: NextPage = () => {
     }).catch((error) => {
       console.log(error)
     }).finally(() => {
-      // setDisplayName("");
-      // setPhotoURL(null);
       router.push("/mypage")
-      // window.location.href = '/mypage';
     });
   }
 
@@ -133,9 +124,8 @@ const Edit: NextPage = () => {
           <Box marginBottom='45px'>
             <HeadSecond>アカウント編集</HeadSecond>
             <ContainerBox>
-              <Flex align='flex-start' justify='space-between' marginBottom='45px'>
+              <Flex flexDirection={{ base: "column-reverse", md: "row" }} align='flex-start' justify='space-between' marginBottom='45px'>
                 <Box>
-                  {/* {user !== null ? */}
                   {src ?
                     <Image src={src} alt="" display='block' w='85px' h='85px' borderRadius='50%' m='0 auto 25px' objectFit='cover' />
                     :
@@ -152,20 +142,20 @@ const Edit: NextPage = () => {
                   />
                   <Button
                     onClick={onButtonClick}
-                    w='330px'
+                    w={{ base: "auto", md: '330px' }}
                     borderColor='#AAE2CF'
                   >
                     ファイルを選択
                   </Button>
                 </Box>
-                <Box w='450px'>
+                <Box w={{ base: "100%", md: '450px' }}>
                   <Box marginBottom='25px'>
                     <SubText marginBottom='10px'>
                       アカウント名
                     </SubText>
                     <Input
                       type='text'
-                      w='330px'
+                      w={{ base: "100%", md: '330px' }}
                       borderColor='#AAE2CF'
                       value={displayName}
                       onChange={handleChangeDisplayName}

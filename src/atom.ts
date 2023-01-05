@@ -1,29 +1,5 @@
-// import { getAuth } from 'firebase/auth'
-// import { atom } from 'recoil'
-
-// export type User = {
-//   id: string,
-//   name: string | null,
-//   email: string | null
-// }
-
-// const auth = getAuth();
-
-// export type AuthState = User | null;
-
-// // export const authState = atom<AuthState>({
-// //   key: 'authState',
-// //   default: null,
-// // })
-// export const authState = atom({
-//   key: 'authState',
-//   default: null,
-// })
-
-
-
-import { useState, useEffect } from "react";
-import { atom, useRecoilValue, useRecoilState } from "recoil"
+import { useEffect } from "react";
+import { atom, useRecoilState } from "recoil"
 import { getAuth, onAuthStateChanged, User } from "firebase/auth"
 import { app } from "./firebase"
 

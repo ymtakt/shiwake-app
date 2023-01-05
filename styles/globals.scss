@@ -52,32 +52,20 @@ a {
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
   position: relative;
-  // transform: translate(0, 0);
   transform-origin: bottom center;
   transform: rotate(0) translateX(0);
 }
 
 @keyframes fadeInAnime {
   0% {
-    // transform: translate(0, 0);
     transform: rotate(0) translateX(0);
   }
 
-  // 25% {
-  //   transform: translate(0, 150px);
-  // }
-
   50% {
-    // transform: translate(calc(-1 * -100px), 100px);
     transform: rotate(10deg) translate(-26px, 30px);
   }
 
-  // 75% {
-  //   transform: translate(calc(-1 * 150px), 0);
-  // }
-
   100% {
-    // transform: translate(0, 0);
     transform: rotate(0) translateX(0);
   }
 }

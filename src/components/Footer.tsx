@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react'
+import { Flex, Image, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 
 import styles from '../../styles/Footer.module.scss'

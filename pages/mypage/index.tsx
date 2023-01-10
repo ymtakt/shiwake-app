@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import Link from "next/link";
 import { Flex, Box, Image, Text, TableContainer, Table, Thead, Tbody, Th, Td, Tr } from '@chakra-ui/react'
-import { collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 import { format } from 'date-fns'
 
 import { Layout } from '../../src/components/Layout'
@@ -13,13 +13,10 @@ import { SubText } from "../../src/Parts/SubText";
 import { useAuth } from "../../src/atom";
 
 import styles from '../../styles/Table.module.scss';
-import { app } from "../../src/firebase";
-import { useRouter } from "next/router";
+import { db } from "../../src/firebase";
+import { createPositiveAndNegativeNumArray } from "../../src/util";
 
 const Mypage: NextPage = () => {
-
-  //データのステート
-  const [userData, setUserData] = useState<any>([]);
 
   //これまで全て5個まで
   const [details, setDetails] = useState<any>([]);
@@ -32,54 +29,17 @@ const Mypage: NextPage = () => {
   //Recoilのログイン状態
   const user = useAuth();
 
-  //データベース接続
-  const db = getFirestore(app);
-
-  //ルーティング
-  const router = useRouter();
-
   //日付→今月
   const today = new Date();
   const thisMonth = today.getMonth() + 1;
 
-
-
-  //収入配列
-  const positiveNum = detailsMonth.filter((n: { type: string; pl: string; }) => {
-    const positiveNumber = n.type === '収入' && n.pl === 'true';
-    return positiveNumber;
-  });
-
-
-  //支出配列
-  const negativeNum = detailsMonth.filter((n: { type: string; pl: string; }) => {
-    const negativeNumber = n.type === '支出' && n.pl === 'true';
-    return negativeNumber;
-  });
-
-  const plus = positiveNum.reduce((sum: any, detailMonth: { price: any; }) => {
-    const plus = sum + detailMonth.price;
-    return plus;
-  }, 0)
-
-  const minus = negativeNum.reduce((sum: any, detailMonth: { price: any; }) => {
-    const minus = sum + detailMonth.price;
-    return minus;
-  }, 0)
-
+  const { plus, minus } = createPositiveAndNegativeNumArray(detailsMonth);
   const monthAnser = plus - minus;
-
 
   useEffect(() => {
     (async () => {
-
       if (user) {
-
-        //ユーザーデータ読み込み
-        // const usersCollectionRef = collection(db, 'users', user.uid, 'details');
-
         //今月の全て5個まで読み込み
-        //getDocs
         const ref = query(collection(db, 'users', user.uid, 'details'), where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
         const docSnapw = await getDocs(ref);
         setDetails(docSnapw.docs.map((doc) => (
@@ -87,7 +47,6 @@ const Mypage: NextPage = () => {
         )));
 
         //今月の内容全て読み込み
-        //getDocs
         const refa = query(collection(db, 'users', user.uid, 'details'), where("month", "==", thisMonth));
         const docSnapwa = await getDocs(refa);
         setDetailsMonth(docSnapwa.docs.map((doc) => (
@@ -98,18 +57,13 @@ const Mypage: NextPage = () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log(docSnap.data())
           setSrc(docSnap.data().photoURL);
         } else {
           console.log("No such document!");
         }
-        // console.log(src)
-        // return () => unsub()
       }
-
     })()
-    // }, [user, src]);
-  }, []);
+  }, [user, src]);
 
 
   return (

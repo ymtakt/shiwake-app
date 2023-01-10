@@ -12,19 +12,15 @@ import { SubText } from "../../src/Parts/SubText";
 import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
 import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 import { useAuth } from "../../src/atom";
-import { app } from "../../src/firebase";
+import { app, db, storage } from "../../src/firebase";
+import { RegisterForm } from "../../src/components/RegisterForm";
 
 
 const Id = () => {
   //Recoilのログイン状態
   const user = useAuth();
-  //データベース接続
-  const db = getFirestore(app);
   //ルーティング
   const router = useRouter();
-  //ストレージ(画像用)
-  const storage = getStorage();
-
 
   const [accountDebit, setAccountDebit] = useState(router.query.accountDebit);
   const [accountCredit, setAccountCredit] = useState(router.query.accountCredit);
@@ -34,7 +30,6 @@ const Id = () => {
 
   const datea = router.query.date
   const [date, setDate] = useState(datea);
-  console.log(date)
 
   const [file, setFile] = useState(router.query.file);
   const [client, setClient] = useState(router.query.client);
@@ -42,47 +37,43 @@ const Id = () => {
   const [pl, setPl] = useState(router.query.pl);
   const [payment, setPayment] = useState(router.query.payment);
 
-
-  const [calcTaxDebit, setCalcTaxDebit] = useState<any>(router.query.priceTax);
-  const [calcTaxCredit, setCalcTaxCredit] = useState<any>(router.query.priceTax2);
-
+  const [calcTaxDebit, setCalcTaxDebit] = useState<any>(router.query.priceTaxDebit);
+  const [calcTaxCredit, setCalcTaxCredit] = useState<any>(router.query.priceTaxCredit);
 
   const [photoURL, setPhotoURL] = useState<any>(router.query.file);
 
-
   const inputRef = useRef<HTMLInputElement>(null);
-  const boolean = router.query.active
+  const booleanDebit = router.query.activeDebit
 
-  const boolean2 = router.query.active2
+  const booleanCredit = router.query.activeCredit
 
-  const boo = boolean === "true" ? true : false
-  const boo2 = boolean2 === "true" ? true : false
+  const booDebit = booleanDebit === "true" ? true : false
+  const booCredit = booleanCredit === "true" ? true : false
 
-  const [active, setActive] = useState(boo);
-  const [active2, setActive2] = useState(boo2);
+  const [activeDebit, setActiveDebit] = useState(booDebit);
+  const [activeCredit, setActiveCredit] = useState(booCredit);
 
-  const [tax, setTax] = useState(router.query.tax)
-  const [tax2, setTax2] = useState(router.query.tax2)
+  const [taxDebit, setTaxDebit] = useState(router.query.taxDebit)
+  const [taxCredit, setTaxCredit] = useState(router.query.taxCredit)
 
-
-  const classToggle = () => {
-    setActive(!active)
-    if (active === true) {
-      setTax('0%')
+  const classToggleDebit = () => {
+    setActiveDebit(!activeDebit)
+    if (activeDebit === true) {
+      setTaxDebit('0%')
       setCalcTaxDebit(Number(0))
     } else {
-      setTax('10%')
+      setTaxDebit('10%')
       setCalcTaxDebit(Math.floor(Number(price) * 0.1))
     }
   }
 
-  const classToggle2 = () => {
-    setActive2(!active2)
-    if (active2 === true) {
-      setTax2('0%')
+  const classToggleCredit = () => {
+    setActiveCredit(!activeCredit)
+    if (activeCredit === true) {
+      setTaxCredit('0%')
       setCalcTaxCredit(Number(0))
     } else {
-      setTax2('10%')
+      setTaxCredit('10%')
       setCalcTaxCredit(Math.floor(Number(price) * 0.1))
     }
   }
@@ -90,13 +81,13 @@ const Id = () => {
 
   const changePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(e.target.value)
-    if (active === true) {
+    if (activeDebit === true) {
       setCalcTaxDebit(Math.floor(Number(e.target.value) * 0.1))
     } else {
       setCalcTaxDebit(Number(0))
     }
 
-    if (active2 === true) {
+    if (activeCredit === true) {
       setCalcTaxCredit(Math.floor(Number(e.target.value) * 0.1))
     } else {
       setCalcTaxCredit(Number(0))
@@ -109,8 +100,6 @@ const Id = () => {
 
 
   const handleChangePhotoURL = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const storage = getStorage();
-    console.log(storage)
     if (e.target.files !== null) {
       if (user) {
         const fileObject = e.target.files[0];
@@ -131,10 +120,8 @@ const Id = () => {
         uploadBytes(mountainsRef, fileObject).then((url) => {
           console.log(url)
           getDownloadURL(mountainsRef).then(url => {
-            // const URL = url.toString()
             setPhotoURL(url);
             console.log(url)
-            // console.log(photoURL)
           });
         });
       }
@@ -162,9 +149,10 @@ const Id = () => {
       accountCredit,
       type,
       price: Number(price),
-      price2: Number(price),
-      priceTax: calcTaxDebit,
-      priceTax2: calcTaxCredit,
+      priceDebit: Number(price),
+      priceCredit: Number(price),
+      priceTaxDebit: calcTaxDebit,
+      priceTaxCredit: calcTaxCredit,
       date: new Date(date),
       timestamp: new Date(),
       year: new Date(date).getFullYear(),
@@ -173,10 +161,10 @@ const Id = () => {
       note,
       client,
       file: photoURL,
-      tax,
-      tax2,
-      active,
-      active2,
+      taxDebit,
+      taxCredit,
+      activeDebit,
+      activeCredit,
       pl,
       payment
     });
@@ -343,8 +331,8 @@ const Id = () => {
                     <SubText>
                       税率
                     </SubText>
-                    <Button onClick={classToggle} className={active ? "tax" : ""} disabled={tax === '10%' ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={tax === '10%' ? '#3AA796' : '#fff'} color={tax === '10%' ? '#fff' : '#3AA796'} border={tax === '10%' ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
-                    <Button onClick={classToggle} className={active ? "" : "tax"} disabled={tax === '0%' ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={tax === '0%' ? '#3AA796' : '#fff'} color={tax === '0%' ? '#fff' : '#3AA796'} border={tax === '0%' ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>なし</Button>
+                    <Button onClick={classToggleDebit} className={activeDebit ? "tax" : ""} disabled={taxDebit === '10%' ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={taxDebit === '10%' ? '#3AA796' : '#fff'} color={taxDebit === '10%' ? '#fff' : '#3AA796'} border={taxDebit === '10%' ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
+                    <Button onClick={classToggleDebit} className={activeDebit ? "" : "tax"} disabled={taxDebit === '0%' ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={taxDebit === '0%' ? '#3AA796' : '#fff'} color={taxDebit === '0%' ? '#fff' : '#3AA796'} border={taxDebit === '0%' ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>なし</Button>
                   </Flex>
                   <Box>
                     <Flex align='center' justifyContent='space-between'>
@@ -352,7 +340,7 @@ const Id = () => {
                         税率
                       </SubText>
                       <Text>¥
-                        {tax === '10%'
+                        {taxDebit === '10%'
                           ? Math.floor(Number(price) * 0.1).toLocaleString()
                           : 0
                         }
@@ -363,7 +351,7 @@ const Id = () => {
                         合計
                       </SubText>
                       <Text>¥
-                        {price}
+                        {Number(price).toLocaleString()}
                       </Text>
                     </Flex>
                   </Box>
@@ -425,8 +413,8 @@ const Id = () => {
                     <SubText>
                       税率
                     </SubText>
-                    <Button onClick={classToggle2} className={active2 ? "tax" : ""} disabled={active2 ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={active2 ? '#3AA796' : '#fff'} color={active2 ? '#fff' : '#3AA796'} border={active2 ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
-                    <Button onClick={classToggle2} className={active2 ? "" : "tax"} disabled={active2 ? false : true} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={active2 ? '#fff' : '#3AA796'} color={active2 ? '#3AA796' : '#fff'} border={active2 ? '1px solid #3AA796' : 'none'} opacity='1 !important' fontSize='12px' textAlign='center'>なし</Button>
+                    <Button onClick={classToggleCredit} className={activeCredit ? "tax" : ""} disabled={activeCredit ? true : false} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={activeCredit ? '#3AA796' : '#fff'} color={activeCredit ? '#fff' : '#3AA796'} border={activeCredit ? 'none' : '1px solid #3AA796'} opacity='1 !important' fontSize='12px' textAlign='center'>10%</Button>
+                    <Button onClick={classToggleCredit} className={activeCredit ? "" : "tax"} disabled={activeCredit ? false : true} display='inline-block' h='auto' p='8px 7px' marginLeft='5px' backgroundColor={activeCredit ? '#fff' : '#3AA796'} color={activeCredit ? '#3AA796' : '#fff'} border={activeCredit ? '1px solid #3AA796' : 'none'} opacity='1 !important' fontSize='12px' textAlign='center'>なし</Button>
                   </Flex>
                   <Box>
                     <Flex align='center' justifyContent='space-between'>
@@ -434,7 +422,7 @@ const Id = () => {
                         税率
                       </SubText>
                       <Text>¥
-                        {tax2 === '10%'
+                        {taxCredit === '10%'
                           ? Math.floor(Number(price) * 0.1).toLocaleString()
                           : 0
                         }
@@ -445,7 +433,7 @@ const Id = () => {
                         合計
                       </SubText>
                       <Text>¥
-                        {price}
+                        {Number(price).toLocaleString()}
                       </Text>
                     </Flex>
                   </Box>
@@ -457,13 +445,7 @@ const Id = () => {
               <SubText marginBottom='10px'>
                 書類データ
               </SubText>
-              {/* <Input
-                type='file'
-              // value={file}
-              // onChange={e => setFile(e.target.value)}
-              /> */}
               <Flex flexWrap={{ base: "wrap", md: "nowrap" }}>
-                {/* <Box ref={fileName}></Box> */}
                 <Input
                   id="image"
                   ref={inputRef}
@@ -496,7 +478,6 @@ const Id = () => {
                 <Image w={{ base: "100%", md: "48%" }} src={file} alt="" display='block' h='auto' marginLeft='auto' objectFit='cover' />
               </Flex>
             </Box>
-
 
             <Box marginBottom='30px'>
               <SubText marginBottom='10px'>

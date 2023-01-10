@@ -2,17 +2,16 @@ import { NextPage } from "next/types";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Box, Input, Stack, Button, InputGroup, InputRightElement, Image } from '@chakra-ui/react'
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useRouter } from "next/router";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 
-import { app } from '../src/firebase';
+import { auth, db, storage } from '../src/firebase';
 import { LayoutAuth } from "../src/components/LayoutAuth";
 
 
 const Signup: NextPage = () => {
-
 
   //ユーザー登録情報State
   const [displayName, setDisplayName] = useState("");
@@ -23,21 +22,12 @@ const Signup: NextPage = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  //認証用
-  const auth = getAuth();
-
-  //ストレージ(画像用)
-  const storage = getStorage();
-
   //ルーティング
   const router = useRouter();
 
   //パスワード表示、非表示
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-
-  //データベース接続
-  const db = getFirestore(app);
 
 
   //入力値
@@ -55,9 +45,7 @@ const Signup: NextPage = () => {
       const fileObject = e.target.files[0];
       setPhotoURL(fileObject)
       setSrc(window.URL.createObjectURL(fileObject));
-      // console.log(e.target.files[0].name)
     }
-    // setPhotoURL(e.target.files[0].name);
   }
 
   const onButtonClick = () => {
@@ -70,12 +58,14 @@ const Signup: NextPage = () => {
     const authUser = createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         //サインイン後の処理
-        // let url: any = "";
+
+        //ここら辺からシンプルにできるか？
         const user = userCredential.user;
         updateProfile(auth.currentUser as any, {
           displayName: displayName,
         })
 
+        //ここのif分を関数にできるか
         const uid = user.uid
 
         if (photoURL) {
@@ -99,16 +89,15 @@ const Signup: NextPage = () => {
               });
             })
           });
-        } else {
-          setDoc(doc(db, "users", uid), {
-            displayName: displayName,
-            name: 'user',
-            photoURL: null,
-            uid
-          });
         }
-
-      })
+        setDoc(doc(db, "users", uid), {
+          displayName: displayName,
+          name: 'user',
+          photoURL: null,
+          uid
+        });
+      }
+      )
 
     setDisplayName("");
     setEmail("");
@@ -118,7 +107,6 @@ const Signup: NextPage = () => {
   }
 
   //ページリロード時にログイン状態を監視、リダイレクト
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -139,7 +127,6 @@ const Signup: NextPage = () => {
             <Box p={{ base: "25px", md: "60px" }} bg='White'>
               <Stack marginBottom='45px' spacing='20px'>
                 <Box>
-                  {/* <Box ref={fileName}></Box> */}
                   <Image src={src} alt="" display='block' w='85px' h='85px' borderRadius='50%' m='0 auto 25px' objectFit='cover' />
                   <Input
                     id="image"
@@ -184,8 +171,8 @@ const Signup: NextPage = () => {
                   <InputRightElement width='4.5rem'>
                     <Box onClick={handleClick} cursor='pointer'>
                       {show
-                        ? <Image src="/viewicon-open.svg" w='1em' h='1em' />
-                        : <Image src="/viewicon-close.svg" w='1em' h='1em' />
+                        ? <Image alt="" src="/viewicon-open.svg" w='1em' h='1em' />
+                        : <Image alt="" src="/viewicon-close.svg" w='1em' h='1em' />
                       }
                     </Box>
                   </InputRightElement>

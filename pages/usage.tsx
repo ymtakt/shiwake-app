@@ -10,8 +10,6 @@ import { HeadSecond } from "../src/Parts/HeadSecond";
 import styles from '../styles/Usage.module.scss'
 
 const Mypage: NextPage = () => {
-
-
   return (
     <>
       <Layout>

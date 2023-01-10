@@ -2,16 +2,13 @@ import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Box, Input, Stack, Button, InputGroup, InputRightElement, Image, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure } from '@chakra-ui/react'
-import { getAuth, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
-import { useSetRecoilState } from "recoil";
+import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 
 import { LayoutAuth } from "../src/components/LayoutAuth";
-import { app } from "../src/firebase";
+import { auth } from "../src/firebase";
 import { useRouter } from "next/router";
 import { Buttonsecondary } from "../src/Parts/Buttonsecondary";
 import { ButtonPrimary } from "../src/Parts/ButtonPrimary";
-
-
 
 
 const Login: NextPage = () => {
@@ -20,11 +17,7 @@ const Login: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  //
-  // const auth = getAuth(app);
-  const auth = getAuth();
   const user = auth.currentUser;
-
 
   //ルーティング
   const router = useRouter();
@@ -35,8 +28,6 @@ const Login: NextPage = () => {
   //パスワード表示、非表示
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
-
-
 
   //入力値
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +43,6 @@ const Login: NextPage = () => {
       .then((userCredential) => {
         //サインイン後の処理
         const user = userCredential.user;
-        //...
         console.log("ログイン完了")
         router.push("/mypage")
       })
@@ -84,14 +74,8 @@ const Login: NextPage = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        // ...
         router.push("/mypage")
-      } else {
-        // User is signed out
-        // ...
       }
     });
   }, []);

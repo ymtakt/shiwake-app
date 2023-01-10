@@ -10,12 +10,10 @@ import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
 import { ContainerBox } from "../../src/Parts/ContainerBox";
 import { HeadSecond } from "../../src/Parts/HeadSecond";
 import { SubText } from "../../src/Parts/SubText";
-import { app } from "../../src/firebase";
+import { auth, db, storage } from "../../src/firebase";
 import { useRouter } from "next/router";
 import { useAuth } from "../../src/atom";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
-
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 
 const Edit: NextPage = () => {
@@ -27,13 +25,7 @@ const Edit: NextPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   //Recoilのログイン状態
-  const auth = getAuth(app);
-  //データベース接続
-  const db = getFirestore(app);
-  //Recoilのログイン状態
   const user = useAuth();
-  //ストレージ(画像用)
-  const storage = getStorage();
   //ルーティング
   const router = useRouter();
 
@@ -42,6 +34,7 @@ const Edit: NextPage = () => {
   const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayName(e.target.value);
   }
+
   const handleChangePhotoURL = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
       const fileObject = e.target.files[0];
@@ -53,13 +46,12 @@ const Edit: NextPage = () => {
   const onButtonClick = () => {
     inputRef.current?.click();
   };
-  const handleEdit = () => {
 
+  const handleEdit = () => {
     updateProfile(auth.currentUser as any, {
       displayName: displayName,
     }).then(() => {
-      console.log('ok')
-
+      // console.log('ok')
       const uid = user.uid
 
       if (photoURL) {
@@ -94,13 +86,8 @@ const Edit: NextPage = () => {
   useEffect(() => {
     (async () => {
       if (user) {
-        //ユーザー読み込み
-        // await onSnapshot(doc(db, "users", user.uid), (doc) => {
-        //   setUserData(doc.data())
-        // });
         //ユーザーデータ読み込み
         const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
-
         //ユーザーのphotoURLを取得
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
@@ -110,10 +97,8 @@ const Edit: NextPage = () => {
         } else {
           console.log("No such document!");
         }
-
         setDisplayName(user.displayName)
       }
-
     })()
   }, [user]);
 

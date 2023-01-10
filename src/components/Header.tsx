@@ -1,28 +1,21 @@
 import Link from 'next/link'
 import { Box, Drawer, DrawerBody, DrawerContent, DrawerOverlay, Flex, IconButton, Image, ListItem, Stack, Text, UnorderedList, useDisclosure } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useRouter } from 'next/router';
 
 import styles from '../../styles/Header.module.scss'
-import { app } from '../firebase';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { useAuth, userState } from '../atom';
-
+import { auth } from '../firebase';
+import { useAuth } from '../atom';
 
 type Props = {
   className?: string
 }
 
-
 export const Header = (props: Props) => {
 
-  const auth = getAuth(app);
-  const router = useRouter();
-
   const user = useAuth();
-
+  const router = useRouter();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -35,29 +28,12 @@ export const Header = (props: Props) => {
     })
   })
 
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     // User is signed in, see docs for a list of available properties
-  //     // https://firebase.google.com/docs/reference/js/firebase.User
-  //     const uid = user.uid;
-  //     // ...
-  //     // const displayName = user.displayName;
-  //     console.log(user);
-  //     setUser(user);
-  //   } else {
-  //     // User is signed out
-  //     // ...
-  //   }
-  // });
-
-
   return (
     <header className={styles.header + (props.className ? ` ${props.className}` : "")} >
       <Flex justify='space-between' align='center'>
         <Link href={'/'}>
           <Image src="/logo-wh.png" alt="shiwake" width='85px' height='auto' />
         </Link>
-        {/* <Flex> */}
         <Flex>
           {user !== null &&
             <Flex align='center' onClick={handleClick} cursor='pointer'>
@@ -129,7 +105,6 @@ export const Header = (props: Props) => {
             </Drawer>
           </Box>
         </Flex>
-        {/* </Flex> */}
       </Flex>
     </header >
   )

@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import { Box, Flex, TableContainer, Table, Thead, Tbody, Th, Td, Tr } from '@chakra-ui/react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { doc, getFirestore, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 import { useAuth } from "../../src/atom";
-import { app } from "../../src/firebase";
+import { db } from "../../src/firebase";
 
 import { Layout } from '../../src/components/Layout'
 import { HeadSecond } from "../../src/Parts/HeadSecond";
@@ -31,14 +23,11 @@ ChartJS.register(
   Legend
 );
 
-
 const Year: NextPage = () => {
   //データのステート
   const [userData, setUserData] = useState<any>();
   // Recoilのログイン状態
   const user = useAuth();
-  // データベース接続
-  const db = getFirestore(app);
 
   const {
     plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec,
@@ -91,12 +80,6 @@ const Year: NextPage = () => {
       <Layout>
         <Box w='100%'>
           <HeadSecond>年間収支レポート</HeadSecond>
-          {/* <Box marginBottom='35px'>
-            <Link href={'/report'}>
-              <Buttonsecondary>月次収支レポート</Buttonsecondary>
-            </Link>
-            <ButtonPrimary>年間収支レポート</ButtonPrimary>
-          </Box> */}
           <Flex className={report.mav_flex}>
             <Box className={report.prev} onClick={onclickLastYear}>前の年</Box>
             <Box className={report.list}>{year}年</Box>

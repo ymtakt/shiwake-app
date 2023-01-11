@@ -12,7 +12,9 @@ import { Layout } from '../../src/components/Layout'
 import { HeadSecond } from "../../src/Parts/HeadSecond";
 
 import report from '../../styles/Report.module.scss';
-import { useReport } from "../../src/useReport";
+import { useReport } from "../../src/hooks/useReport";
+import { monthsInQuarter } from "date-fns";
+import { month } from "../../src/util";
 
 ChartJS.register(
   CategoryScale,
@@ -30,8 +32,9 @@ const Year: NextPage = () => {
   const user = useAuth();
 
   const {
-    plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec,
-    minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec,
+    // plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec,
+    // minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec,
+    monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year } = useReport();
 
   const options = {
@@ -51,12 +54,14 @@ const Year: NextPage = () => {
     datasets: [
       {
         label: '収入',
-        data: [plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec],
+        data: monthPositiveTotal.map((num) => num.price),
+        // plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec],
         backgroundColor: '#59A0E6',
       },
       {
         label: '支出',
-        data: [minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec],
+        data: monthNegativeTotal.map((num) => num.price),
+        // minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec],
         backgroundColor: '#E67A59',
       },
     ],
@@ -94,24 +99,18 @@ const Year: NextPage = () => {
                 <Thead>
                   <Tr>
                     <Th></Th>
-                    <Th>{year}年1月</Th>
-                    <Th>{year}年2月</Th>
-                    <Th>{year}年3月</Th>
-                    <Th>{year}年4月</Th>
-                    <Th>{year}年5月</Th>
-                    <Th>{year}年6月</Th>
-                    <Th>{year}年7月</Th>
-                    <Th>{year}年8月</Th>
-                    <Th>{year}年9月</Th>
-                    <Th>{year}年10月</Th>
-                    <Th>{year}年11月</Th>
-                    <Th>{year}年12月</Th>
+                    {month.map((month) => (
+                      <Th key={month}>{year}年{month}</Th>
+                    ))}
                   </Tr>
                 </Thead>
                 <Tbody>
                   <Tr>
                     <Td>収入</Td>
-                    <Td>+{Number(plusJan).toLocaleString()}円</Td>
+                    {monthPositiveTotal.map((monthPrice) => (
+                      <Td key={monthPrice.id}>+{Number(monthPrice.price).toLocaleString()}円</Td>
+                    ))}
+                    {/* <Td>+{Number(plusJan).toLocaleString()}円</Td>
                     <Td>+{Number(plusFeb).toLocaleString()}円</Td>
                     <Td>+{Number(plusMar).toLocaleString()}円</Td>
                     <Td>+{Number(plusApr).toLocaleString()}円</Td>
@@ -122,11 +121,14 @@ const Year: NextPage = () => {
                     <Td>+{Number(plusSep).toLocaleString()}円</Td>
                     <Td>+{Number(plusOct).toLocaleString()}円</Td>
                     <Td>+{Number(plusNov).toLocaleString()}円</Td>
-                    <Td>+{Number(plusDec).toLocaleString()}円</Td>
+                    <Td>+{Number(plusDec).toLocaleString()}円</Td> */}
                   </Tr>
                   <Tr>
                     <Td>支出</Td>
-                    <Td>-{Number(minusJan).toLocaleString()}円</Td>
+                    {monthNegativeTotal.map((monthPrice) => (
+                      <Td key={monthPrice.id}>-{Number(monthPrice.price).toLocaleString()}円</Td>
+                    ))}
+                    {/* <Td>-{Number(minusJan).toLocaleString()}円</Td>
                     <Td>-{Number(minusFeb).toLocaleString()}円</Td>
                     <Td>-{Number(minusMar).toLocaleString()}円</Td>
                     <Td>-{Number(minusApr).toLocaleString()}円</Td>
@@ -137,11 +139,14 @@ const Year: NextPage = () => {
                     <Td>-{Number(minusSep).toLocaleString()}円</Td>
                     <Td>-{Number(minusOct).toLocaleString()}円</Td>
                     <Td>-{Number(minusNov).toLocaleString()}円</Td>
-                    <Td>-{Number(minusDec).toLocaleString()}円</Td>
+                    <Td>-{Number(minusDec).toLocaleString()}円</Td> */}
                   </Tr>
                   <Tr>
                     <Td>合計</Td>
-                    <Td>{Number(plusJan - minusJan).toLocaleString()}円</Td>
+                    {calc.map((price) => (
+                      <Td key={price.id}>{Number(price.price).toLocaleString()}円</Td>
+                    ))}
+                    {/* <Td>{Number(plusJan - minusJan).toLocaleString()}円</Td>
                     <Td>{Number(plusFeb - minusFeb).toLocaleString()}円</Td>
                     <Td>{Number(plusMar - minusMar).toLocaleString()}円</Td>
                     <Td>{Number(plusApr - minusApr).toLocaleString()}円</Td>
@@ -152,7 +157,7 @@ const Year: NextPage = () => {
                     <Td>{Number(plusSep - minusSep).toLocaleString()}円</Td>
                     <Td>{Number(plusOct - minusOct).toLocaleString()}円</Td>
                     <Td>{Number(plusNov - minusNov).toLocaleString()}円</Td>
-                    <Td>{Number(plusDec - minusDec).toLocaleString()}円</Td>
+                    <Td>{Number(plusDec - minusDec).toLocaleString()}円</Td> */}
                   </Tr>
                 </Tbody>
 

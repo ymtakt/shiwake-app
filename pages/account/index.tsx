@@ -14,9 +14,8 @@ import { db } from "../../src/firebase";
 
 import styles from '../../styles/Table.module.scss';
 import { TableReports } from "../../src/components/TableReports";
-import { useMonth } from "../../src/useMonth";
-import { usePageNavi } from "../../src/usePageNavi";
 import { DetailsModal } from "../../src/components/DetailsModal";
+import { selectMonth } from "../../src/util";
 
 export type Detail = {
   id: number;
@@ -44,7 +43,7 @@ export type Detail = {
 const Mypage: NextPage = () => {
   const {
     nowtoday, lastMonth1, lastMonth2, lastMonth3, lastMonth4, lastMonth5, lastMonth6,
-    lastMonth7, lastMonth8, lastMonth9, lastMonth10, lastMonth11 } = useMonth();
+    lastMonth7, lastMonth8, lastMonth9, lastMonth10, lastMonth11 } = selectMonth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

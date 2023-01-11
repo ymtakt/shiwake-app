@@ -8,6 +8,7 @@ import { ContainerBox } from "../src/Parts/ContainerBox";
 import { HeadSecond } from "../src/Parts/HeadSecond";
 
 import styles from '../styles/Usage.module.scss'
+import { accountName } from "../src/util";
 
 const Mypage: NextPage = () => {
   return (
@@ -31,23 +32,23 @@ const Mypage: NextPage = () => {
               <p>登録内容は下記になります。</p>
               <div className={styles.table}>
                 <dl>
-                  <dt>日付</dt>
+                  <dt>{accountName.date}</dt>
                   <dd>発生日を選択します。</dd>
-                  <dt>収支</dt>
+                  <dt>{accountName.payments}</dt>
                   <dd>「収入」「支出」を選択します。</dd>
-                  <dt>取引先</dt>
+                  <dt>{accountName.client}</dt>
                   <dd>取引先名を入力します。</dd>
-                  <dt>損益</dt>
+                  <dt>{accountName.pl}</dt>
                   <dd>損益計算(レポート)をするかしないかを選択します。</dd>
-                  <dt>決済</dt>
+                  <dt>{accountName.settlement}</dt>
                   <dd>決済が完了している処理かを入力します。</dd>
-                  <dt>借方</dt>
+                  <dt>{accountName.debit}</dt>
                   <dd>借方の金額・勘定科目・税区分を入力します。</dd>
-                  <dt>貸方</dt>
+                  <dt>{accountName.credit}</dt>
                   <dd>貸方の金額・勘定科目・税区分を入力します。</dd>
-                  <dt>書類データ</dt>
+                  <dt>{accountName.image}</dt>
                   <dd>書類データを保存します。</dd>
-                  <dt>備考</dt>
+                  <dt>{accountName.remarks}</dt>
                   <dd>自由にメモとして情報を記載します。</dd>
 
                 </dl>

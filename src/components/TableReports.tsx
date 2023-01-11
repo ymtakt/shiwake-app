@@ -5,6 +5,7 @@ import type { Detail } from '../../pages/account'
 
 import styles from '../../styles/Table.module.scss';
 import { useAuth } from '../atom'
+import { accountName } from '../util';
 
 type Props = {
   detailList: Detail[],
@@ -48,8 +49,8 @@ export const TableReports = ({ detailList, type, onOpenModal }: Props) => {
                   <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
                     <Flex justifyContent='space-between'>
                       <Box>
-                        <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
-                          借方：{detail.accountCredit}</Box>
+                        <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>{accountName.credit}：{detail.accountDebit}<br />
+                          {accountName.debit}：{detail.accountCredit}</Box>
                         <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
                       </Box>
                       <Flex fontSize='14px'>
@@ -100,8 +101,8 @@ export const TableReports = ({ detailList, type, onOpenModal }: Props) => {
                     <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
                       <Flex justifyContent='space-between'>
                         <Box>
-                          <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
-                            借方：{detail.accountCredit}</Box>
+                          <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>{accountName.credit}：{detail.accountDebit}<br />
+                            {accountName.debit}：{detail.accountCredit}</Box>
                           <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
                         </Box>
                         <Flex fontSize='14px'>
@@ -153,8 +154,8 @@ export const TableReports = ({ detailList, type, onOpenModal }: Props) => {
                     <Box key={detail.id} paddingTop='8px' paddingBottom='8px' borderBottom='1px solid #c9c9c9'>
                       <Flex justifyContent='space-between'>
                         <Box>
-                          <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>貸方：{detail.accountDebit}<br />
-                            借方：{detail.accountCredit}</Box>
+                          <Box fontSize='14px' color='#c9c9c9' fontWeight='600'>{accountName.credit}：{detail.accountDebit}<br />
+                            {accountName.debit}：{detail.accountCredit}</Box>
                           <Box fontSize='12px' color='#c9c9c9' marginTop='15px' >{format(detail.date.toDate(), 'yyyy年M月d日')}</Box>
                         </Box>
                         <Flex fontSize='14px'>
@@ -207,13 +208,13 @@ export const TableReports = ({ detailList, type, onOpenModal }: Props) => {
             <Thead>
               <Tr>
                 <Th className={styles.table_first}></Th>
-                <Th>決済</Th>
-                <Th>借方</Th>
-                <Th>貸方</Th>
-                <Th>金額</Th>
-                <Th>摘要</Th>
-                <Th>取引先</Th>
-                <Th>取引日</Th>
+                <Th>{accountName.settlement}</Th>
+                <Th>{accountName.debit}</Th>
+                <Th>{accountName.credit}</Th>
+                <Th>{accountName.price}</Th>
+                <Th>{accountName.remarks}</Th>
+                <Th>{accountName.credit}</Th>
+                <Th>{accountName.date}</Th>
                 <Th className={styles.table_last}></Th>
               </Tr>
             </Thead>

@@ -14,6 +14,7 @@ import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
 import { useAuth } from "../../src/atom";
 import { app, db, storage } from "../../src/firebase";
 import { RegisterForm } from "../../src/components/RegisterForm";
+import { accountName } from "../../src/util";
 
 
 const Id = () => {
@@ -199,7 +200,7 @@ const Id = () => {
             <Flex marginBottom='30px' flexWrap={{ base: "wrap", md: "nowrap" }}>
               <Box w={{ base: "40%", md: "auto" }} marginRight='25px' marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
-                  日付
+                  {accountName.date}
                 </SubText>
                 <Input
                   type='date'
@@ -212,7 +213,7 @@ const Id = () => {
               </Box>
               <Box w={{ base: "39%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
-                  収支
+                  {accountName.payments}
                 </SubText>
                 <Select
                   borderColor='#AAE2CF'
@@ -229,7 +230,7 @@ const Id = () => {
               </Box>
               <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }} marginBottom={{ base: "25px", md: "0" }}>
                 <SubText marginBottom='10px'>
-                  取引先
+                  {accountName.client}
                 </SubText>
                 <Input
                   type='text'
@@ -243,7 +244,7 @@ const Id = () => {
               </Box>
               <Box w={{ base: "26%", md: "auto" }} marginRight='25px'>
                 <SubText marginBottom='10px'>
-                  損益
+                  {accountName.pl}
                 </SubText>
                 <Select
                   borderColor='#AAE2CF'
@@ -259,7 +260,7 @@ const Id = () => {
               </Box>
               <Box w={{ base: "20%", md: "auto" }} >
                 <SubText marginBottom='10px'>
-                  決済
+                  {accountName.settlement}
                 </SubText>
                 <Select
                   borderColor='#AAE2CF'
@@ -278,7 +279,7 @@ const Id = () => {
             <Flex justify='space-between' align='flex-start' flexWrap={{ base: "wrap", md: "nowrap" }} marginBottom='30px'>
               <Box w={{ base: "100%", md: "auto" }} marginRight={{ base: "0", md: "25px" }}>
                 <SubText marginBottom='10px'>
-                  借方
+                  {accountName.debit}
                 </SubText>
                 <Flex marginBottom='15px'>
                   <Select borderColor='#AAE2CF' marginRight='10px' color='#65748A' fontWeight={'bold'} placeholder="勘定科目" cursor='pointer' value={accountDebit}
@@ -360,7 +361,7 @@ const Id = () => {
 
               <Box w={{ base: "100%", md: "auto" }}>
                 <SubText marginBottom='10px'>
-                  貸方
+                  {accountName.credit}
                 </SubText>
                 <Flex marginBottom='15px'>
                   <Select borderColor='#AAE2CF' marginRight='10px' color='#65748A' fontWeight={'bold'} placeholder="勘定科目" cursor='pointer' value={accountCredit}
@@ -443,7 +444,7 @@ const Id = () => {
 
             <Box marginBottom='30px'>
               <SubText marginBottom='10px'>
-                書類データ
+                {accountName.image}
               </SubText>
               <Flex flexWrap={{ base: "wrap", md: "nowrap" }}>
                 <Input
@@ -481,7 +482,7 @@ const Id = () => {
 
             <Box marginBottom='30px'>
               <SubText marginBottom='10px'>
-                備考
+                {accountName.remarks}
               </SubText>
               <Textarea
                 borderColor='#AAE2CF'

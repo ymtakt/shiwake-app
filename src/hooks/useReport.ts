@@ -38,9 +38,9 @@ export const useReport = () => {
   ));
 
 
-  const monthPositiveTotal = monthPositive.map((monthNum, length) => (
+  const monthPositiveTotal = monthPositive.map((monthNum, index) => (
     {
-      id: length,
+      id: index,
       price: monthNum.reduce((sum: any, X: { price: any; }) => {
         const plus = sum + X.price;
         return Number(plus);
@@ -48,9 +48,9 @@ export const useReport = () => {
     }
   ));
 
-  const monthNegativeTotal = monthNegative.map((monthNum, length) => (
+  const monthNegativeTotal = monthNegative.map((monthNum, index) => (
     {
-      id: length,
+      id: index,
       price: monthNum.reduce((sum: any, X: { price: any; }) => {
         const minus = sum + X.price;
         return Number(minus);

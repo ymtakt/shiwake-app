@@ -13,6 +13,35 @@ export const accountName = {
 
 export const month = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
+export const sidebars = [
+  {
+    name: 'ホーム',
+    href: '/mypage',
+    src: '/icon-home.svg',
+  },
+  {
+    name: '使い方',
+    href: '/usage',
+    src: '/icon-usage.svg',
+  },
+  {
+    name: '仕訳入力',
+    href: '/account/register',
+    src: '/icon-register.svg',
+  },
+  {
+    name: '仕訳一覧',
+    href: '/account',
+    src: '/icon-account.svg',
+  },
+  {
+    name: '損益レポート',
+    href: '/report',
+    src: '/icon-report.svg',
+  },
+
+]
+
 export const createPositiveAndNegativeNumArray = (month?: any) => {
   //月間収入配列
   const positiveNum = month.filter((n: { type: string; pl: string; }) => {

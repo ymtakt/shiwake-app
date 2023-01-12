@@ -8,6 +8,7 @@ import {
   Text,
   Stack
 } from '@chakra-ui/react'
+import { sidebars } from '../util'
 
 
 export const Sidebar = () => {
@@ -17,46 +18,16 @@ export const Sidebar = () => {
         <nav>
           <UnorderedList listStyleType='none' m='35px 0 0'>
             <Stack spacing='35px'>
-              <ListItem>
-                <Link href={'/mypage'}>
-                  <Flex align='center' justify='center'>
-                    <Image src="/icon-home.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>ホーム</Text>
-                  </Flex>
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link href={'/usage'}>
-                  <Flex align='center' justify='center'>
-                    <Image src="/icon-usage.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>使い方</Text>
-                  </Flex>
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link href={'/account/register'}>
-                  <Flex align='center' justify='center'>
-                    <Image src="/icon-register.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>仕訳入力</Text>
-                  </Flex>
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link href={'/account'}>
-                  <Flex align='center' justify='center'>
-                    <Image src="/icon-account.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>仕訳一覧</Text>
-                  </Flex>
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link href={'/report'}>
-                  <Flex align='center' justify='center'>
-                    <Image src="/icon-report.svg" alt='' w='1.2em' />
-                    <Text color='white' marginLeft='10px' fontSize='14px'>損益レポート</Text>
-                  </Flex>
-                </Link>
-              </ListItem>
+              {sidebars.map((item, index) => (
+                <ListItem key={index}>
+                  <Link href={item.href}>
+                    <Flex align='center' justify='center'>
+                      <Image src={item.src} alt='' w='1.2em' />
+                      <Text color='white' marginLeft='10px' fontSize='14px'>{item.name}</Text>
+                    </Flex>
+                  </Link>
+                </ListItem>
+              ))}
             </Stack>
           </UnorderedList>
         </nav>

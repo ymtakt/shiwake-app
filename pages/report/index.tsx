@@ -69,9 +69,10 @@ const Year: NextPage = () => {
     (async () => {
       if (user) {
         //ユーザー読み込み
-        await onSnapshot(doc(db, "users", user.uid), (doc) => {
+        const unsubscribe = await onSnapshot(doc(db, "users", user.uid), (doc) => {
           setUserData(doc.data())
         });
+        unsubscribe();
       }
     })()
     // }, [user, nowYear]);

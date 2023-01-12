@@ -34,6 +34,8 @@ const Year: NextPage = () => {
     monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year } = useReport();
 
+  const numberToLocalString = (price: string | number) => Number(price).toLocaleString()
+
   const options = {
     responsive: true,
     plugins: {
@@ -103,19 +105,19 @@ const Year: NextPage = () => {
                   <Tr>
                     <Td>収入</Td>
                     {monthPositiveTotal.map((monthPrice) => (
-                      <Td key={monthPrice.id}>+{Number(monthPrice.price).toLocaleString()}円</Td>
+                      <Td key={monthPrice.id}>+{numberToLocalString(monthPrice.price)}円</Td>
                     ))}
                   </Tr>
                   <Tr>
                     <Td>支出</Td>
                     {monthNegativeTotal.map((monthPrice) => (
-                      <Td key={monthPrice.id}>-{Number(monthPrice.price).toLocaleString()}円</Td>
+                      <Td key={monthPrice.id}>-{numberToLocalString(monthPrice.price)}円</Td>
                     ))}
                   </Tr>
                   <Tr>
                     <Td>合計</Td>
                     {calc.map((price) => (
-                      <Td key={price.id}>{Number(price.price).toLocaleString()}円</Td>
+                      <Td key={price.id}>{numberToLocalString(price.price)}円</Td>
                     ))}
                   </Tr>
                 </Tbody>

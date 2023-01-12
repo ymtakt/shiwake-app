@@ -23,20 +23,20 @@ const Id = () => {
   //ルーティング
   const router = useRouter();
 
-  const [accountDebit, setAccountDebit] = useState(router.query.accountDebit);
-  const [accountCredit, setAccountCredit] = useState(router.query.accountCredit);
-  const [type, setType] = useState(router.query.type);
-  const [price, setPrice] = useState(router.query.price);
-  const [note, setNote] = useState(router.query.note);
+  const [accountDebit, setAccountDebit] = useState<string | string[] | undefined>(router.query.accountDebit);
+  const [accountCredit, setAccountCredit] = useState<string | string[] | undefined>(router.query.accountCredit);
+  const [type, setType] = useState<string | string[] | undefined>(router.query.type);
+  const [price, setPrice] = useState<string | string[] | undefined>(router.query.price);
+  const [note, setNote] = useState<string | string[] | undefined>(router.query.note);
 
-  const datea = router.query.date
-  const [date, setDate] = useState(datea);
+  const datea: string | string[] | undefined = router.query.date
+  const [date, setDate] = useState<string | string[] | undefined>(datea);
 
-  const [file, setFile] = useState(router.query.file);
-  const [client, setClient] = useState(router.query.client);
+  const [file, setFile] = useState<string | string[] | undefined>(router.query.file);
+  const [client, setClient] = useState<string | string[] | undefined>(router.query.client);
 
-  const [pl, setPl] = useState(router.query.pl);
-  const [payment, setPayment] = useState(router.query.payment);
+  const [pl, setPl] = useState<string | string[] | undefined>(router.query.pl);
+  const [payment, setPayment] = useState<string | string[] | undefined>(router.query.payment);
 
   const [calcTaxDebit, setCalcTaxDebit] = useState<any>(router.query.priceTaxDebit);
   const [calcTaxCredit, setCalcTaxCredit] = useState<any>(router.query.priceTaxCredit);
@@ -44,18 +44,18 @@ const Id = () => {
   const [photoURL, setPhotoURL] = useState<any>(router.query.file);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const booleanDebit = router.query.activeDebit
+  const booleanDebit: string | string[] | undefined = router.query.activeDebit
 
-  const booleanCredit = router.query.activeCredit
+  const booleanCredit: string | string[] | undefined = router.query.activeCredit
 
-  const booDebit = booleanDebit === "true" ? true : false
-  const booCredit = booleanCredit === "true" ? true : false
+  const booDebit: boolean = booleanDebit === "true" ? true : false
+  const booCredit: boolean = booleanCredit === "true" ? true : false
 
-  const [activeDebit, setActiveDebit] = useState(booDebit);
-  const [activeCredit, setActiveCredit] = useState(booCredit);
+  const [activeDebit, setActiveDebit] = useState<boolean>(booDebit);
+  const [activeCredit, setActiveCredit] = useState<boolean>(booCredit);
 
-  const [taxDebit, setTaxDebit] = useState(router.query.taxDebit)
-  const [taxCredit, setTaxCredit] = useState(router.query.taxCredit)
+  const [taxDebit, setTaxDebit] = useState<string | string[] | undefined>(router.query.taxDebit)
+  const [taxCredit, setTaxCredit] = useState<string | string[] | undefined>(router.query.taxCredit)
 
   const classToggleDebit = () => {
     setActiveDebit(!activeDebit)

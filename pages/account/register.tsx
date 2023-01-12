@@ -27,13 +27,13 @@ const Mypage: NextPage = () => {
   //ルーティング
   const router = useRouter();
 
-  const [accountDebit, setAccountDebit] = useState("");
-  const [accountCredit, setAccountCredit] = useState("");
-  const [type, setType] = useState("");
-  const [price, setPrice] = useState("");
+  const [accountDebit, setAccountDebit] = useState<string>("");
+  const [accountCredit, setAccountCredit] = useState<string>("");
+  const [type, setType] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
 
-  const [pl, setPl] = useState("true");
-  const [payment, setPayment] = useState("true");
+  const [pl, setPl] = useState<string>("true");
+  const [payment, setPayment] = useState<string>("true");
 
   //計算後の金額を登録
   const [calcPriceDebit, setCalcPriceDebit] = useState<number>();
@@ -42,22 +42,22 @@ const Mypage: NextPage = () => {
   const [calcTaxDebit, setCalcTaxDebit] = useState<number>();
   const [calcTaxCredit, setCalcTaxCredit] = useState<number>();
 
-  const [note, setNote] = useState("");
-  const [date, setDate] = useState("");
+  const [note, setNote] = useState<string>("");
+  const [date, setDate] = useState<string>("");
 
-  const [file, setFile] = useState("");
-  const [client, setClient] = useState("");
+  const [file, setFile] = useState<string>("");
+  const [client, setClient] = useState<string>("");
 
-  const [src, setSrc] = useState("");
+  const [src, setSrc] = useState<string>("");
   const [photoURL, setPhotoURL] = useState<File | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [activeDebit, setActiveDebit] = useState<boolean>(true);
-  const [taxDebit, setTaxDebit] = useState('10%')
+  const [taxDebit, setTaxDebit] = useState<string>('10%')
 
   const [activeCredit, setActiveCredit] = useState<boolean>(true);
-  const [taxCredit, setTaxCredit] = useState('10%')
+  const [taxCredit, setTaxCredit] = useState<string>('10%')
 
   const [disable, setDisable] = useState<boolean>(true);
 

@@ -52,10 +52,10 @@ const Mypage: NextPage = () => {
   const [modalDetail, setModalDetail] = useState<any>({});
 
   const nowYear = format(nowtoday, 'yyyy年M月');
-  const [year, setYear] = useState(nowYear.toString());
-  const [type, setType] = useState("all");
+  const [year, setYear] = useState<string>(nowYear.toString());
+  const [type, setType] = useState<string>("all");
 
-  const [itemsOffset, setItemsOffset] = useState(0);
+  const [itemsOffset, setItemsOffset] = useState<number>(0);
 
   //Recoilのログイン状態
   const user = useAuth();
@@ -85,7 +85,7 @@ const Mypage: NextPage = () => {
         )));
       }
     })()
-  }, [user, year]);
+  }, [user, year, details]);
 
   return (
     <>

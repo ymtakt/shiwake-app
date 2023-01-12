@@ -10,11 +10,11 @@ import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { Layout } from '../../src/components/Layout'
-import { ContainerBox } from "../../src/Parts/ContainerBox";
-import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { SubText } from "../../src/Parts/SubText";
-import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
+import { ContainerBox } from "../../src/components/ContainerBox";
+import { HeadSecond } from "../../src/components/HeadSecond";
+import { SubText } from "../../src/components/SubText";
+import { Buttonsecondary } from "../../src/components/Buttonsecondary";
+import { ButtonPrimary } from "../../src/components/ButtonPrimary";
 import { db, storage } from "../../src/firebase";
 import { useAuth } from "../../src/atom";
 

@@ -6,10 +6,10 @@ import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from '
 import { format } from 'date-fns'
 
 import { Layout } from '../../src/components/Layout'
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
-import { ContainerBox } from "../../src/Parts/ContainerBox";
-import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { SubText } from "../../src/Parts/SubText";
+import { ButtonPrimary } from "../../src/components/ButtonPrimary";
+import { ContainerBox } from "../../src/components/ContainerBox";
+import { HeadSecond } from "../../src/components/HeadSecond";
+import { SubText } from "../../src/components/SubText";
 import { useAuth } from "../../src/atom";
 
 import styles from '../../styles/Table.module.scss';

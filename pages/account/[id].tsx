@@ -5,12 +5,12 @@ import { collection, deleteDoc, doc, getFirestore, setDoc } from "firebase/fires
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { Layout } from '../../src/components/Layout'
-import { ContainerBox } from "../../src/Parts/ContainerBox";
-import { HeadSecond } from "../../src/Parts/HeadSecond";
+import { ContainerBox } from "../../src/components/ContainerBox";
+import { HeadSecond } from "../../src/components/HeadSecond";
 
-import { SubText } from "../../src/Parts/SubText";
-import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
+import { SubText } from "../../src/components/SubText";
+import { Buttonsecondary } from "../../src/components/Buttonsecondary";
+import { ButtonPrimary } from "../../src/components/ButtonPrimary";
 import { useAuth } from "../../src/atom";
 import { app, db, storage } from "../../src/firebase";
 import { RegisterForm } from "../../src/components/RegisterForm";

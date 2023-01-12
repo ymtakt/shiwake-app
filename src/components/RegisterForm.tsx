@@ -1,9 +1,9 @@
 import { Box, Button, Flex, Image, Input, Select, Text, Textarea } from '@chakra-ui/react'
 import Link from 'next/link'
 import React, { RefObject, SetStateAction } from 'react'
-import { ButtonPrimary } from '../Parts/ButtonPrimary'
-import { Buttonsecondary } from '../Parts/Buttonsecondary'
-import { SubText } from '../Parts/SubText'
+import { ButtonPrimary } from './ButtonPrimary'
+import { Buttonsecondary } from './Buttonsecondary'
+import { SubText } from './SubText'
 
 import styles from '../../styles/Select.module.scss';
 import { accountName } from '../util'

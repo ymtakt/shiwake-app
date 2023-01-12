@@ -4,8 +4,8 @@ import { Box } from '@chakra-ui/react';
 import Image from "next/image";
 
 import { Layout } from '../src/components/Layout'
-import { ContainerBox } from "../src/Parts/ContainerBox";
-import { HeadSecond } from "../src/Parts/HeadSecond";
+import { ContainerBox } from "../src/components/ContainerBox";
+import { HeadSecond } from "../src/components/HeadSecond";
 
 import styles from '../styles/Usage.module.scss'
 import { accountName } from "../src/util";

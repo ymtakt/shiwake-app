@@ -7,8 +7,8 @@ import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword 
 import { LayoutAuth } from "../src/components/LayoutAuth";
 import { auth } from "../src/firebase";
 import { useRouter } from "next/router";
-import { Buttonsecondary } from "../src/Parts/Buttonsecondary";
-import { ButtonPrimary } from "../src/Parts/ButtonPrimary";
+import { Buttonsecondary } from "../src/components/Buttonsecondary";
+import { ButtonPrimary } from "../src/components/ButtonPrimary";
 
 
 const Login: NextPage = () => {

@@ -9,11 +9,10 @@ import { useAuth } from "../../src/atom";
 import { db } from "../../src/firebase";
 
 import { Layout } from '../../src/components/Layout'
-import { HeadSecond } from "../../src/Parts/HeadSecond";
+import { HeadSecond } from "../../src/components/HeadSecond";
 
 import report from '../../styles/Report.module.scss';
 import { useReport } from "../../src/hooks/useReport";
-import { monthsInQuarter } from "date-fns";
 import { month } from "../../src/util";
 
 ChartJS.register(
@@ -32,8 +31,6 @@ const Year: NextPage = () => {
   const user = useAuth();
 
   const {
-    // plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec,
-    // minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec,
     monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year } = useReport();
 
@@ -55,13 +52,11 @@ const Year: NextPage = () => {
       {
         label: '収入',
         data: monthPositiveTotal.map((num) => num.price),
-        // plusJan, plusFeb, plusMar, plusApr, plusMay, plusJun, plusJul, plusAug, plusSep, plusOct, plusNov, plusDec],
         backgroundColor: '#59A0E6',
       },
       {
         label: '支出',
         data: monthNegativeTotal.map((num) => num.price),
-        // minusJan, minusFeb, minusMar, minusApr, minusMay, minusJun, minusJul, minusAug, minusSep, minusOct, minusNov, minusDec],
         backgroundColor: '#E67A59',
       },
     ],
@@ -110,54 +105,18 @@ const Year: NextPage = () => {
                     {monthPositiveTotal.map((monthPrice) => (
                       <Td key={monthPrice.id}>+{Number(monthPrice.price).toLocaleString()}円</Td>
                     ))}
-                    {/* <Td>+{Number(plusJan).toLocaleString()}円</Td>
-                    <Td>+{Number(plusFeb).toLocaleString()}円</Td>
-                    <Td>+{Number(plusMar).toLocaleString()}円</Td>
-                    <Td>+{Number(plusApr).toLocaleString()}円</Td>
-                    <Td>+{Number(plusMay).toLocaleString()}円</Td>
-                    <Td>+{Number(plusJun).toLocaleString()}円</Td>
-                    <Td>+{Number(plusJul).toLocaleString()}円</Td>
-                    <Td>+{Number(plusAug).toLocaleString()}円</Td>
-                    <Td>+{Number(plusSep).toLocaleString()}円</Td>
-                    <Td>+{Number(plusOct).toLocaleString()}円</Td>
-                    <Td>+{Number(plusNov).toLocaleString()}円</Td>
-                    <Td>+{Number(plusDec).toLocaleString()}円</Td> */}
                   </Tr>
                   <Tr>
                     <Td>支出</Td>
                     {monthNegativeTotal.map((monthPrice) => (
                       <Td key={monthPrice.id}>-{Number(monthPrice.price).toLocaleString()}円</Td>
                     ))}
-                    {/* <Td>-{Number(minusJan).toLocaleString()}円</Td>
-                    <Td>-{Number(minusFeb).toLocaleString()}円</Td>
-                    <Td>-{Number(minusMar).toLocaleString()}円</Td>
-                    <Td>-{Number(minusApr).toLocaleString()}円</Td>
-                    <Td>-{Number(minusMay).toLocaleString()}円</Td>
-                    <Td>-{Number(minusJun).toLocaleString()}円</Td>
-                    <Td>-{Number(minusJul).toLocaleString()}円</Td>
-                    <Td>-{Number(minusAug).toLocaleString()}円</Td>
-                    <Td>-{Number(minusSep).toLocaleString()}円</Td>
-                    <Td>-{Number(minusOct).toLocaleString()}円</Td>
-                    <Td>-{Number(minusNov).toLocaleString()}円</Td>
-                    <Td>-{Number(minusDec).toLocaleString()}円</Td> */}
                   </Tr>
                   <Tr>
                     <Td>合計</Td>
                     {calc.map((price) => (
                       <Td key={price.id}>{Number(price.price).toLocaleString()}円</Td>
                     ))}
-                    {/* <Td>{Number(plusJan - minusJan).toLocaleString()}円</Td>
-                    <Td>{Number(plusFeb - minusFeb).toLocaleString()}円</Td>
-                    <Td>{Number(plusMar - minusMar).toLocaleString()}円</Td>
-                    <Td>{Number(plusApr - minusApr).toLocaleString()}円</Td>
-                    <Td>{Number(plusMay - minusMay).toLocaleString()}円</Td>
-                    <Td>{Number(plusJun - minusJun).toLocaleString()}円</Td>
-                    <Td>{Number(plusJul - minusJul).toLocaleString()}円</Td>
-                    <Td>{Number(plusAug - minusAug).toLocaleString()}円</Td>
-                    <Td>{Number(plusSep - minusSep).toLocaleString()}円</Td>
-                    <Td>{Number(plusOct - minusOct).toLocaleString()}円</Td>
-                    <Td>{Number(plusNov - minusNov).toLocaleString()}円</Td>
-                    <Td>{Number(plusDec - minusDec).toLocaleString()}円</Td> */}
                   </Tr>
                 </Tbody>
 

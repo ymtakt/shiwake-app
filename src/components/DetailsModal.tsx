@@ -4,9 +4,9 @@ import {
 } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import React from 'react'
-import { ButtonPrimary } from '../Parts/ButtonPrimary'
-import { ContainerBox } from '../Parts/ContainerBox'
-import { SubText } from '../Parts/SubText'
+import { ButtonPrimary } from './ButtonPrimary'
+import { ContainerBox } from './ContainerBox'
+import { SubText } from './SubText'
 
 
 type Props = {

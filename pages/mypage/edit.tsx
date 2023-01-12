@@ -5,11 +5,11 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 import { Layout } from '../../src/components/Layout'
-import { ButtonPrimary } from "../../src/Parts/ButtonPrimary";
-import { Buttonsecondary } from "../../src/Parts/Buttonsecondary";
-import { ContainerBox } from "../../src/Parts/ContainerBox";
-import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { SubText } from "../../src/Parts/SubText";
+import { ButtonPrimary } from "../../src/components/ButtonPrimary";
+import { Buttonsecondary } from "../../src/components/Buttonsecondary";
+import { ContainerBox } from "../../src/components/ContainerBox";
+import { HeadSecond } from "../../src/components/HeadSecond";
+import { SubText } from "../../src/components/SubText";
 import { auth, db, storage } from "../../src/firebase";
 import { useRouter } from "next/router";
 import { useAuth } from "../../src/atom";

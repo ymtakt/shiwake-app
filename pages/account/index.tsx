@@ -7,9 +7,9 @@ import { format } from 'date-fns'
 import ReactPaginate from 'react-paginate';
 
 import { Layout } from '../../src/components/Layout'
-import { ContainerBox } from "../../src/Parts/ContainerBox";
-import { HeadSecond } from "../../src/Parts/HeadSecond";
-import { SubText } from "../../src/Parts/SubText";
+import { ContainerBox } from "../../src/components/ContainerBox";
+import { HeadSecond } from "../../src/components/HeadSecond";
+import { SubText } from "../../src/components/SubText";
 import { db } from "../../src/firebase";
 
 import styles from '../../styles/Table.module.scss';

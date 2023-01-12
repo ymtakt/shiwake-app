@@ -9,6 +9,8 @@ import { auth } from "../src/firebase";
 import { useRouter } from "next/router";
 import { Buttonsecondary } from "../src/components/Buttonsecondary";
 import { ButtonPrimary } from "../src/components/ButtonPrimary";
+import { ModalResetPassword } from "../src/components/ModalResetPassword";
+
 
 
 const Login: NextPage = () => {
@@ -23,7 +25,7 @@ const Login: NextPage = () => {
   const router = useRouter();
 
   //パスワードリセット、モーダル
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   //パスワード表示、非表示
   const [show, setShow] = useState(false)
@@ -54,20 +56,6 @@ const Login: NextPage = () => {
       });
     setEmail("");
     setPassword("");
-  }
-
-  //パスワードリセットイベント
-  const handleResetPassword = (email: string) => {
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        console.log('メールを送信しました')
-        router.push("/login")
-        onClose();
-      })
-      .catch((err => {
-        console.log(err)
-      }))
-    setEmail("");
   }
 
   //ページリロード時にログイン状態を監視、リダイレクト
@@ -122,28 +110,7 @@ const Login: NextPage = () => {
               <Link href={'/signup'}>アカウントをお持ちでない方</Link>
               <Button textAlign='center' fontWeight='normal' fontSize='14px' color='#64A2D7' background='transparent' onClick={onOpen}>パスワードを忘れた方</Button>
             </Stack>
-            <Modal isOpen={isOpen} onClose={onClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>パスワード再設定</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Input
-                    type='email'
-                    placeholder='メールアドレス'
-                    w='330px'
-                    borderColor='#AAE2CF'
-                    value={email}
-                    onChange={handleChangeEmail}
-                  />
-                </ModalBody>
-
-                <ModalFooter>
-                  <Buttonsecondary>キャンセル</Buttonsecondary>
-                  <ButtonPrimary onClick={() => handleResetPassword(email)}>パスワード再設定メールを送る</ButtonPrimary>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
+            <ModalResetPassword isOpen={isOpen} onClose={onClose} />
           </Box>
         </Box>
       </Box>

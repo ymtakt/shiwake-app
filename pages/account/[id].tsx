@@ -12,9 +12,9 @@ import { SubText } from "../../src/components/SubText";
 import { Buttonsecondary } from "../../src/components/Buttonsecondary";
 import { ButtonPrimary } from "../../src/components/ButtonPrimary";
 import { useAuth } from "../../src/atom";
-import { app, db, storage } from "../../src/firebase";
-import { RegisterForm } from "../../src/components/RegisterForm";
+import { db, storage } from "../../src/firebase";
 import { accountName } from "../../src/util";
+import { AccountSelectOptions } from "../../src/components/AccountSelectOptions";
 
 
 const Id = () => {
@@ -284,39 +284,7 @@ const Id = () => {
                 <Flex marginBottom='15px'>
                   <Select borderColor='#AAE2CF' marginRight='10px' color='#65748A' fontWeight={'bold'} placeholder="勘定科目" cursor='pointer' value={accountDebit}
                     onChange={e => setAccountDebit(e.target.value)}>
-                    <option disabled>資産</option>
-                    <option value="現金">&nbsp;&nbsp;&nbsp;&nbsp;現金</option>
-                    <option value="預金-PayPay銀行">&nbsp;&nbsp;&nbsp;&nbsp;預金(PayPay銀行)</option>
-                    <option value="売掛金">&nbsp;&nbsp;&nbsp;&nbsp;売掛金</option>
-                    <option value="事業主貸">&nbsp;&nbsp;&nbsp;&nbsp;事業主貸</option>
-                    <option disabled>負債</option>
-                    <option value="買掛金">&nbsp;&nbsp;&nbsp;&nbsp;買掛金</option>
-                    <option value="借入金">&nbsp;&nbsp;&nbsp;&nbsp;借入金</option>
-                    <option value="未払金-アメックス">&nbsp;&nbsp;&nbsp;&nbsp;未払金(アメックス)</option>
-                    <option value="未払金-MUFJ">&nbsp;&nbsp;&nbsp;&nbsp;未払金(MUFJ)</option>
-                    <option value="前受金">&nbsp;&nbsp;&nbsp;&nbsp;前受金</option>
-                    <option value="事業主借">&nbsp;&nbsp;&nbsp;&nbsp;事業主借</option>
-                    <option disabled>純資産</option>
-
-                    <option disabled>収益</option>
-                    <option value="元入金">&nbsp;&nbsp;&nbsp;&nbsp;売上</option>
-                    <option disabled>費用</option>
-                    <option value="水道光熱費">&nbsp;&nbsp;&nbsp;&nbsp;水道光熱費</option>
-                    <option value="旅費交通費">&nbsp;&nbsp;&nbsp;&nbsp;旅費交通費</option>
-                    <option value="通信費">&nbsp;&nbsp;&nbsp;&nbsp;通信費</option>
-                    <option value="広告宣伝費">&nbsp;&nbsp;&nbsp;&nbsp;広告宣伝費</option>
-                    <option value="接待交際費">&nbsp;&nbsp;&nbsp;&nbsp;接待交際費</option>
-                    <option value="損害保険料">&nbsp;&nbsp;&nbsp;&nbsp;損害保険料</option>
-                    <option value="消耗品費">&nbsp;&nbsp;&nbsp;&nbsp;消耗品費</option>
-                    <option value="減価償却費">&nbsp;&nbsp;&nbsp;&nbsp;減価償却費</option>
-                    <option value="福利厚生費">&nbsp;&nbsp;&nbsp;&nbsp;福利厚生費</option>
-                    <option value="外注工賃">&nbsp;&nbsp;&nbsp;&nbsp;外注工賃</option>
-                    <option value="地代家賃">&nbsp;&nbsp;&nbsp;&nbsp;地代家賃</option>
-                    <option value="新聞図書費">&nbsp;&nbsp;&nbsp;&nbsp;新聞図書費</option>
-                    <option value="車両関係費">&nbsp;&nbsp;&nbsp;&nbsp;車両関係費</option>
-                    <option value="支払手数料">&nbsp;&nbsp;&nbsp;&nbsp;支払手数料</option>
-                    <option value="諸会費">&nbsp;&nbsp;&nbsp;&nbsp;諸会費</option>
-                    <option value="雑費">&nbsp;&nbsp;&nbsp;&nbsp;雑費</option>
+                    <AccountSelectOptions />
                   </Select>
                   <Input
                     type='number'
@@ -366,39 +334,7 @@ const Id = () => {
                 <Flex marginBottom='15px'>
                   <Select borderColor='#AAE2CF' marginRight='10px' color='#65748A' fontWeight={'bold'} placeholder="勘定科目" cursor='pointer' value={accountCredit}
                     onChange={e => setAccountCredit(e.target.value)}>
-                    <option disabled>資産</option>
-                    <option value="現金">&nbsp;&nbsp;&nbsp;&nbsp;現金</option>
-                    <option value="預金-PayPay銀行">&nbsp;&nbsp;&nbsp;&nbsp;預金(PayPay銀行)</option>
-                    <option value="売掛金">&nbsp;&nbsp;&nbsp;&nbsp;売掛金</option>
-                    <option value="事業主貸">&nbsp;&nbsp;&nbsp;&nbsp;事業主貸</option>
-                    <option disabled>負債</option>
-                    <option value="買掛金">&nbsp;&nbsp;&nbsp;&nbsp;買掛金</option>
-                    <option value="借入金">&nbsp;&nbsp;&nbsp;&nbsp;借入金</option>
-                    <option value="未払金-アメックス">&nbsp;&nbsp;&nbsp;&nbsp;未払金(アメックス)</option>
-                    <option value="未払金-MUFJ">&nbsp;&nbsp;&nbsp;&nbsp;未払金(MUFJ)</option>
-                    <option value="前受金">&nbsp;&nbsp;&nbsp;&nbsp;前受金</option>
-                    <option value="事業主借">&nbsp;&nbsp;&nbsp;&nbsp;事業主借</option>
-                    <option disabled>純資産</option>
-
-                    <option disabled>収益</option>
-                    <option value="売上">&nbsp;&nbsp;&nbsp;&nbsp;売上</option>
-                    <option disabled>費用</option>
-                    <option value="水道光熱費">&nbsp;&nbsp;&nbsp;&nbsp;水道光熱費</option>
-                    <option value="旅費交通費">&nbsp;&nbsp;&nbsp;&nbsp;旅費交通費</option>
-                    <option value="通信費">&nbsp;&nbsp;&nbsp;&nbsp;通信費</option>
-                    <option value="広告宣伝費">&nbsp;&nbsp;&nbsp;&nbsp;広告宣伝費</option>
-                    <option value="接待交際費">&nbsp;&nbsp;&nbsp;&nbsp;接待交際費</option>
-                    <option value="損害保険料">&nbsp;&nbsp;&nbsp;&nbsp;損害保険料</option>
-                    <option value="消耗品費">&nbsp;&nbsp;&nbsp;&nbsp;消耗品費</option>
-                    <option value="減価償却費">&nbsp;&nbsp;&nbsp;&nbsp;減価償却費</option>
-                    <option value="福利厚生費">&nbsp;&nbsp;&nbsp;&nbsp;福利厚生費</option>
-                    <option value="外注工賃">&nbsp;&nbsp;&nbsp;&nbsp;外注工賃</option>
-                    <option value="地代家賃">&nbsp;&nbsp;&nbsp;&nbsp;地代家賃</option>
-                    <option value="新聞図書費">&nbsp;&nbsp;&nbsp;&nbsp;新聞図書費</option>
-                    <option value="車両関係費">&nbsp;&nbsp;&nbsp;&nbsp;車両関係費</option>
-                    <option value="支払手数料">&nbsp;&nbsp;&nbsp;&nbsp;支払手数料</option>
-                    <option value="諸会費">&nbsp;&nbsp;&nbsp;&nbsp;諸会費</option>
-                    <option value="雑費">&nbsp;&nbsp;&nbsp;&nbsp;雑費</option>
+                    <AccountSelectOptions />
                   </Select>
                   <Input
                     type='number'

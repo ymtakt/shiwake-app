@@ -63,7 +63,8 @@ const Mypage: NextPage = () => {
         }
       }
     })()
-  }, [user, src]);
+    // }, [user, src]);
+  }, []);
 
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { addYears, format, subYears } from "date-fns";
 import { useEffect, useState } from "react";
 import { collection, getDocs, getFirestore, orderBy, query, where } from "firebase/firestore";
@@ -86,10 +87,10 @@ export const useReport = () => {
         setDetailsYear(docSnapw.docs.map((doc) => (
           { ...doc.data(), id: doc.id }
         )));
-
       }
     })()
-  }, [user, nowYear]);
+    // }, [user, nowYear]);
+  }, [nowYear]);
 
   return {
     monthPositiveTotal, monthNegativeTotal, calc,

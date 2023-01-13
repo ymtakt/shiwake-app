@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import { Box, Flex, Select, useDisclosure, } from '@chakra-ui/react'
@@ -85,7 +86,13 @@ const Mypage: NextPage = () => {
         )));
       }
     })()
-  }, [user, year, details]);
+
+    // ここでおそらくエラーになっている
+    // Unhandled Runtime Error
+    // FirebaseError: Quota exceeded.
+
+    // }, [user, year, details]);
+  }, [year]);
 
   return (
     <>

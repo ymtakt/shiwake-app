@@ -30,7 +30,7 @@ const Id = () => {
   const [note, setNote] = useState<string | string[] | undefined>(router.query.note);
 
   const datea: string | string[] | undefined = router.query.date
-  const [date, setDate] = useState<string | string[] | undefined>(datea);
+  const [date, setDate] = useState<any>(datea);
 
   const [file, setFile] = useState<string | string[] | undefined>(router.query.file);
   const [client, setClient] = useState<string | string[] | undefined>(router.query.client);
@@ -133,47 +133,51 @@ const Id = () => {
     setFile("")
   }
 
-  const onClickDelete = async (id: string | undefined) => {
+  const onClickDelete = async (id: string | string[] | undefined) => {
     if (user) {
-      await deleteDoc(doc(db, "users", user.uid, "details", id));
+      // await deleteDoc(doc(db, "users", user.uid, "details", id));
+      const usersRef = collection(db, "users", user.uid, "details")
+      const id = router.query.id as string
+      await deleteDoc(doc(usersRef, id));
       router.push("/account")
     }
   }
 
   const onClickAdd = (e: React.ChangeEvent<HTMLFormElement>) => {
-    const usersRef = collection(db, "users", user.uid, "details")
-    const id = router.query.id as string
+    if (user) {
+      const usersRef = collection(db, "users", user.uid, "details")
+      const id = router.query.id as string
 
-    setDoc(doc(usersRef, id), {
-      uid: user?.uid,
-      accountDebit,
-      accountCredit,
-      type,
-      price: Number(price),
-      priceDebit: Number(price),
-      priceCredit: Number(price),
-      priceTaxDebit: calcTaxDebit,
-      priceTaxCredit: calcTaxCredit,
-      date: new Date(date),
-      timestamp: new Date(),
-      year: new Date(date).getFullYear(),
-      month: new Date(date).getMonth() + 1,
-      yearAndMonth: `${new Date(date).getFullYear()}年${new Date(date).getMonth() + 1}月`,
-      note,
-      client,
-      file: photoURL,
-      taxDebit,
-      taxCredit,
-      activeDebit,
-      activeCredit,
-      pl,
-      payment
-    });
+      setDoc(doc(usersRef, id), {
+        uid: user?.uid,
+        accountDebit,
+        accountCredit,
+        type,
+        price: Number(price),
+        priceDebit: Number(price),
+        priceCredit: Number(price),
+        priceTaxDebit: calcTaxDebit,
+        priceTaxCredit: calcTaxCredit,
+        date: new Date(date),
+        timestamp: new Date(),
+        year: new Date(date).getFullYear(),
+        month: new Date(date).getMonth() + 1,
+        yearAndMonth: `${new Date(date).getFullYear()}年${new Date(date).getMonth() + 1}月`,
+        note,
+        client,
+        file: photoURL,
+        taxDebit,
+        taxCredit,
+        activeDebit,
+        activeCredit,
+        pl,
+        payment
+      });
 
-    router.push("/account");
-    router.reload
+      router.push("/account");
+      router.reload
+    }
   }
-
 
   const onButtonClick = () => {
     inputRef.current?.click();

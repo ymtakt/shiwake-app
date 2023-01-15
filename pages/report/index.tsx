@@ -30,6 +30,9 @@ const Year: NextPage = () => {
   // Recoilのログイン状態
   const user = useAuth();
 
+  console.log(user)
+
+
   const {
     monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year } = useReport();
@@ -64,19 +67,21 @@ const Year: NextPage = () => {
     ],
   };
 
+  //Recoilでuser情報を取得しているからそもそも必要ないかも?
 
-  useEffect(() => {
-    (async () => {
-      if (user) {
-        //ユーザー読み込み
-        const unsubscribe = await onSnapshot(doc(db, "users", user.uid), (doc) => {
-          setUserData(doc.data())
-        });
-        unsubscribe();
-      }
-    })()
-    // }, [user, nowYear]);
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (user) {
+  //       //ユーザー読み込み
+  //       const unsubscribe = await onSnapshot(doc(db, "users", user.uid), (doc) => {
+  //         setUserData(doc.data())
+  //       });
+  //       return unsubscribe();
+  //     }
+  //   })()
+  //   // }, [user, nowYear]);
+  // }, []);
+
 
   return (
     <>

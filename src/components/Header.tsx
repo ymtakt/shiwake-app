@@ -44,7 +44,7 @@ export const Header = (props: Props) => {
           }
           <Box display={{ base: "block", md: "none" }} marginLeft='15px' >
             <IconButton aria-label="メニューボタン"
-              icon={<HamburgerIcon color="#fff" size="md" />}
+              icon={<HamburgerIcon color="#fff" />}
               size="md" variant="unstyled"
               display={{ base: "block", md: "none" }}
               onClick={onOpen}

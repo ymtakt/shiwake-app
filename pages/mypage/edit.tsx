@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NextPage } from "next/types";
 import { Flex, Box, Image, Input, Button } from '@chakra-ui/react'
-import { getAuth, updateProfile } from "firebase/auth";
+import { getAuth, updateProfile, User } from "firebase/auth";
 import { collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 import { Layout } from '../../src/components/Layout'
@@ -18,7 +18,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Edit: NextPage = () => {
 
-  const [displayName, setDisplayName] = useState('');
+  const [displayName, setDisplayName] = useState<any>('');
   const [src, setSrc] = useState('');
   const [photoURL, setPhotoURL] = useState<File | null>(null);
 
@@ -52,29 +52,31 @@ const Edit: NextPage = () => {
       displayName: displayName,
     }).then(() => {
       // console.log('ok')
-      const uid = user.uid
+      if (user) {
+        const uid = user.uid
 
-      if (photoURL) {
-        const S =
-          "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        const N = 16;
-        const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
-          .map((n) => S[n % S.length])
-          .join("");
-        const fileName = randomChar + "_" + photoURL.name;
+        if (photoURL) {
+          const S =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+          const N = 16;
+          const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
+            .map((n) => S[n % S.length])
+            .join("");
+          const fileName = randomChar + "_" + photoURL.name;
 
-        const mountainsRef = ref(storage, `avatars/${fileName}`);
-        uploadBytes(mountainsRef, photoURL).then((url) => {
-          console.log(url);
-          getDownloadURL(mountainsRef).then(url => {
-            setDoc(doc(db, "users", uid), {
-              uid: user?.uid,
-              displayName: displayName,
-              name: 'user',
-              photoURL: url,
-            });
-          })
-        });
+          const mountainsRef = ref(storage, `avatars/${fileName}`);
+          uploadBytes(mountainsRef, photoURL).then((url) => {
+            console.log(url);
+            getDownloadURL(mountainsRef).then(url => {
+              setDoc(doc(db, "users", uid), {
+                uid: user?.uid,
+                displayName: displayName,
+                name: 'user',
+                photoURL: url,
+              });
+            })
+          });
+        }
       }
     }).catch((error) => {
       console.log(error)

@@ -1,5 +1,5 @@
 # shiwake(収支管理アプリ)
-![mv](https://user-images.githubusercontent.com/64601252/212521592-b75c2e0b-5c29-4873-9abe-f6d9b14fb1ca.gif)
+![画面収録_2023-01-15_12_28_04_AdobeExpress](https://user-images.githubusercontent.com/64601252/212523632-10560fca-b556-4001-ae9a-67247dec304c.gif)
 
 ## アプリ URL
 https://shiwake.vercel.app/

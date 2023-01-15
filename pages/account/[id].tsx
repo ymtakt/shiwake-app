@@ -32,7 +32,7 @@ const Id = () => {
   const datea: string | string[] | undefined = router.query.date
   const [date, setDate] = useState<any>(datea);
 
-  const [file, setFile] = useState<string | string[] | undefined>(router.query.file);
+  const [file, setFile] = useState<any>(router.query.file);
   const [client, setClient] = useState<string | string[] | undefined>(router.query.client);
 
   const [pl, setPl] = useState<string | string[] | undefined>(router.query.pl);
@@ -143,11 +143,10 @@ const Id = () => {
     }
   }
 
-  const onClickAdd = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const onClickAdd = () => {
     if (user) {
       const usersRef = collection(db, "users", user.uid, "details")
       const id = router.query.id as string
-
       setDoc(doc(usersRef, id), {
         uid: user?.uid,
         accountDebit,
@@ -173,10 +172,9 @@ const Id = () => {
         pl,
         payment
       });
-
-      router.push("/account");
-      router.reload
     }
+    router.push("/account");
+    router.reload
   }
 
   const onButtonClick = () => {

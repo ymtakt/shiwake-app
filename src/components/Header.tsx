@@ -16,8 +16,8 @@ type Props = {
 
 export const Header = (props: Props) => {
 
-  // const user = useAuth();
-  const [user, setUser] = useRecoilState(userState)
+  const user = useAuth();
+  // const [user, setUser] = useRecoilState(userState)
   const router = useRouter();
 
   const { isOpen, onClose, onOpen } = useDisclosure();

@@ -11,15 +11,19 @@ import { HeadSecond } from "../../src/components/HeadSecond";
 import { SubText } from "../../src/components/SubText";
 import { Buttonsecondary } from "../../src/components/Buttonsecondary";
 import { ButtonPrimary } from "../../src/components/ButtonPrimary";
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 import { db, storage } from "../../src/firebase";
 import { accountName } from "../../src/util";
 import { AccountSelectOptions } from "../../src/components/AccountSelectOptions";
+import { useRecoilState } from "recoil";
+import { useMount } from "../../src/hooks/useMount";
 
 
 const Id = () => {
-  //Recoilのログイン状態
-  const user = useAuth();
+
+  // Recoilのログイン状態
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
   //ルーティング
   const router = useRouter();
 
@@ -191,6 +195,12 @@ const Id = () => {
     })()
   }, [user]);
 
+
+  const { isMounted } = useMount();
+
+  if (!isMounted) {
+    return null;
+  }
 
 
   return (

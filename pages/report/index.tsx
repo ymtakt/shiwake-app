@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Bar } from 'react-chartjs-2';
 import { doc, onSnapshot } from "firebase/firestore";
 
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 import { db } from "../../src/firebase";
 
 import { Layout } from '../../src/components/Layout'
@@ -14,6 +14,7 @@ import { HeadSecond } from "../../src/components/HeadSecond";
 import report from '../../styles/Report.module.scss';
 import { useReport } from "../../src/hooks/useReport";
 import { month } from "../../src/util";
+import { useRecoilState } from "recoil";
 
 ChartJS.register(
   CategoryScale,
@@ -25,16 +26,12 @@ ChartJS.register(
 );
 
 const Year: NextPage = () => {
-  //データのステート
-  const [userData, setUserData] = useState<any>();
   // Recoilのログイン状態
-  const user = useAuth();
-
-  console.log(user)
-
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
 
   const {
-    monthPositiveTotal, monthNegativeTotal, calc,
+    isMounted, monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year } = useReport();
 
   const numberToLocalString = (price: string | number) => Number(price).toLocaleString()
@@ -67,21 +64,9 @@ const Year: NextPage = () => {
     ],
   };
 
-  //Recoilでuser情報を取得しているからそもそも必要ないかも?
-
-  // useEffect(() => {
-  //   (async () => {
-  //     if (user) {
-  //       //ユーザー読み込み
-  //       const unsubscribe = await onSnapshot(doc(db, "users", user.uid), (doc) => {
-  //         setUserData(doc.data())
-  //       });
-  //       return unsubscribe();
-  //     }
-  //   })()
-  //   // }, [user, nowYear]);
-  // }, []);
-
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>

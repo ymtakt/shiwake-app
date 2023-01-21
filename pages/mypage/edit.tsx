@@ -12,11 +12,14 @@ import { HeadSecond } from "../../src/components/HeadSecond";
 import { SubText } from "../../src/components/SubText";
 import { auth, db, storage } from "../../src/firebase";
 import { useRouter } from "next/router";
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useRecoilState } from "recoil";
 
 
 const Edit: NextPage = () => {
+
+  const [isMounted, setIsMounted] = useState(false);
 
   const [displayName, setDisplayName] = useState<any>('');
   const [src, setSrc] = useState('');
@@ -24,8 +27,9 @@ const Edit: NextPage = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  //Recoilのログイン状態
-  const user = useAuth();
+  // Recoilのログイン状態
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
   //ルーティング
   const router = useRouter();
 
@@ -87,6 +91,7 @@ const Edit: NextPage = () => {
 
   useEffect(() => {
     (async () => {
+      setIsMounted(true);
       if (user) {
         //ユーザーデータ読み込み
         const usersCollectionRef = await collection(db, 'users', user.uid, 'details');
@@ -103,6 +108,10 @@ const Edit: NextPage = () => {
       }
     })()
   }, [user]);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>

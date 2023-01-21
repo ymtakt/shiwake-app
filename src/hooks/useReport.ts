@@ -9,6 +9,9 @@ import { createPositiveAndNegativeNumArrayYear } from "../util";
 
 
 export const useReport = () => {
+
+  const [isMounted, setIsMounted] = useState(false);
+
   //年のステート
   const [nowYear, setNowYear] = useState<any>(new Date());
   const year = Number(format(nowYear, 'yyyy'));
@@ -78,6 +81,7 @@ export const useReport = () => {
 
   useEffect(() => {
     (async () => {
+      setIsMounted(true);
       if (user) {
 
         //今月の内容全て読み込み
@@ -93,7 +97,7 @@ export const useReport = () => {
   }, [nowYear]);
 
   return {
-    monthPositiveTotal, monthNegativeTotal, calc,
+    isMounted, monthPositiveTotal, monthNegativeTotal, calc,
     onclickLastYear, onclickNextYear, year
   }
 

@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { NextPage } from "next/types";
 import { Box } from '@chakra-ui/react';
-import Image from "next/image";
 
 import { Layout } from '../src/components/Layout'
 import { ContainerBox } from "../src/components/ContainerBox";
@@ -9,8 +8,30 @@ import { HeadSecond } from "../src/components/HeadSecond";
 
 import styles from '../styles/Usage.module.scss'
 import { accountName } from "../src/util";
+import { useEffect, useState } from "react";
+import { useAuth, userState } from "../src/atom";
+import { useMount } from "../src/hooks/useMount";
+import { useRecoilState } from "recoil";
 
 const Mypage: NextPage = () => {
+
+  const [isMounted, setIsMounted] = useState(false);
+  // Recoilのログイン状態
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
+
+  useEffect(() => {
+    (async () => {
+      setIsMounted(true);
+      if (user) {
+      }
+    })()
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <>
       <Layout>

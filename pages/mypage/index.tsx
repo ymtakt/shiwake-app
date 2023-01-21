@@ -10,13 +10,16 @@ import { ButtonPrimary } from "../../src/components/ButtonPrimary";
 import { ContainerBox } from "../../src/components/ContainerBox";
 import { HeadSecond } from "../../src/components/HeadSecond";
 import { SubText } from "../../src/components/SubText";
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 
 import styles from '../../styles/Table.module.scss';
 import { db } from "../../src/firebase";
 import { createPositiveAndNegativeNumArray } from "../../src/util";
+import { useRecoilState } from "recoil";
 
 const Mypage: NextPage = () => {
+
+  const [isMounted, setIsMounted] = useState(false);
 
   //これまで全て5個まで
   const [details, setDetails] = useState<any>([]);
@@ -26,20 +29,24 @@ const Mypage: NextPage = () => {
   //画像のステート
   const [src, setSrc] = useState<any>();
 
+  const [user, setUser] = useRecoilState(userState)
   //Recoilのログイン状態
-  const user = useAuth();
+  // const user = useAuth();
 
   //日付→今月
   const today = new Date();
   const thisMonth = today.getMonth() + 1;
 
-  const { plus, minus } = createPositiveAndNegativeNumArray(detailsMonth);
+  const { plus, minus } = detailsMonth && createPositiveAndNegativeNumArray(detailsMonth);
   const monthAnser = plus - minus;
 
   useEffect(() => {
     (async () => {
+      console.log("test");
+      setIsMounted(true);
       if (user) {
         //今月の全て5個まで読み込み
+
         const ref = query(collection(db, 'users', user.uid, 'details'), where("month", "==", thisMonth), orderBy('date', 'desc'), limit(5));
         const docSnapw = await getDocs(ref);
         setDetails(docSnapw.docs.map((doc) => (
@@ -66,6 +73,9 @@ const Mypage: NextPage = () => {
     // }, [user, src]);
   }, []);
 
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>
@@ -97,7 +107,7 @@ const Mypage: NextPage = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {details.map((detail: any) => {
+                      {details && details.map((detail: any) => {
                         return (
                           user !== null && (
                             <Tr key={detail.id}>

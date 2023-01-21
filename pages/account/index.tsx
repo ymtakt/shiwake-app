@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { NextPage } from "next/types";
 import { Box, Flex, Select, useDisclosure, } from '@chakra-ui/react'
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { format } from 'date-fns'
 import ReactPaginate from 'react-paginate';
@@ -17,6 +17,8 @@ import styles from '../../styles/Table.module.scss';
 import { TableReports } from "../../src/components/TableReports";
 import { DetailsModal } from "../../src/components/DetailsModal";
 import { selectMonth } from "../../src/util";
+import { useMount } from "../../src/hooks/useMount";
+import { useRecoilState } from "recoil";
 
 export type Detail = {
   id: number;
@@ -58,8 +60,9 @@ const Mypage: NextPage = () => {
 
   const [itemsOffset, setItemsOffset] = useState<number>(0);
 
-  //Recoilのログイン状態
-  const user = useAuth();
+  // Recoilのログイン状態
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
 
   const itemsPerPage = 10;
   const endOffset = itemsOffset + itemsPerPage;
@@ -93,6 +96,13 @@ const Mypage: NextPage = () => {
 
     // }, [user, year, details]);
   }, [year]);
+
+  const { isMounted } = useMount();
+
+  if (!isMounted) {
+    return null;
+  }
+
 
   return (
     <>

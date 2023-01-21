@@ -16,14 +16,17 @@ import { SubText } from "../../src/components/SubText";
 import { Buttonsecondary } from "../../src/components/Buttonsecondary";
 import { ButtonPrimary } from "../../src/components/ButtonPrimary";
 import { db, storage } from "../../src/firebase";
-import { useAuth } from "../../src/atom";
+import { useAuth, userState } from "../../src/atom";
 
 import styles from '../../styles/Select.module.scss';
 import { RegisterForm } from "../../src/components/RegisterForm";
+import { useMount } from "../../src/hooks/useMount";
+import { useRecoilState } from "recoil";
 
 const Mypage: NextPage = () => {
-  //Recoilのログイン状態
-  const user = useAuth();
+  // Recoilのログイン状態
+  const [user, setUser] = useRecoilState(userState)
+  // const user = useAuth();
   //ルーティング
   const router = useRouter();
 
@@ -210,6 +213,12 @@ const Mypage: NextPage = () => {
     }
 
   }, [date, type, client, accountDebit, accountCredit, price]);
+
+  const { isMounted } = useMount();
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>

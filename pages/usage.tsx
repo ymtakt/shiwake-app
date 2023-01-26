@@ -79,7 +79,7 @@ const Mypage: NextPage = () => {
               <h2>収入の入力例</h2>
               <p>収入の入力パターン主な例は下記になります。</p>
               <h3>口座入金の場合</h3>
-              <p>(預金)PayPay銀行/売上高&nbsp;&nbsp;<span className={styles.red}>損益+</span>&nbsp;&nbsp;<span>決済完了</span><br />
+              <p>(預金)事業用口座/売上高&nbsp;&nbsp;<span className={styles.red}>損益+</span>&nbsp;&nbsp;<span>決済完了</span><br />
                 <small>計算項目=貸方</small></p>
 
               <h3>個人口座からの売上</h3>
@@ -87,7 +87,7 @@ const Mypage: NextPage = () => {
                 <small>計算項目=貸方</small></p>
 
               <h3>前受金処理の場合</h3>
-              <p>①(預金)PayPay銀行/前受金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span><br />
+              <p>①(預金)事業用口座/前受金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span><br />
               </p>
 
               <p>②前受金/売上&nbsp;&nbsp;<span className={styles.red}>損益+</span>&nbsp;&nbsp;<span>決済完了</span><br />
@@ -96,14 +96,14 @@ const Mypage: NextPage = () => {
               <p>③売掛金/売上&nbsp;&nbsp;<span className={styles.red}>損益+</span>&nbsp;&nbsp;<span>決済完了</span><br />
                 <small>計算項目=貸方</small></p>
 
-              <p>④(預金)PayPay銀行/売掛金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
+              <p>④(預金)事業用口座/売掛金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
               </p>
 
               <h3>売掛金処理の場合</h3>
               <p>①売掛金/売上&nbsp;&nbsp;<span className={styles.red}>損益+</span>&nbsp;&nbsp;<span>未決済</span><br />
                 <small>計算項目=貸方</small></p>
 
-              <p>②(預金)PayPay銀行/売掛金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
+              <p>②(預金)事業用口座/売掛金&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
               </p>
 
             </div>
@@ -112,24 +112,24 @@ const Mypage: NextPage = () => {
               <p>支出の入力パターン主な例は下記になります。</p>
 
               <h3>事業用口座引き落とし</h3>
-              <p>交際費/(預金)PayPay銀行&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了</span><br />
+              <p>交際費/(預金)事業用口座&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了</span><br />
                 <small>計算項目=借方</small></p>
 
               <h3>事業クレジット支払い</h3>
-              <p>①交際費/未払金(アメックス)&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span><br />
+              <p>①交際費/未払金(事業用クレジット)&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span><br />
               </p>
 
-              <p>②未払金(アメックス)/(預金)PayPay銀行&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
+              <p>②未払金(事業用クレジット)/(預金)事業用口座&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
                 <small>計算項目=借方</small></p>
 
               <h3>個人クレジット支払い</h3>
-              <p>①交際費/未払金(MUFJ)&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span></p>
+              <p>①交際費/未払金(個人用クレジット)&nbsp;&nbsp;<span>損益計算なし</span>&nbsp;&nbsp;<span>未決済</span></p>
 
-              <p>②未払金(MUFJ)/事業主借&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
+              <p>②未払金(個人用クレジット)/事業主借&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了→このタイミングで①を決済完了に</span><br />
                 <small>計算項目=借方</small></p>
 
               <h3>プライベート用引き出し</h3>
-              <p>事業主貸/(預金)PayPay銀行&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了</span><br />
+              <p>事業主貸/(預金)事業用口座&nbsp;&nbsp;<span className={styles.blue}>損益-</span>&nbsp;&nbsp;<span>決済完了</span><br />
                 <small>計算項目=借方</small></p>
 
               <h3>プライベート資金からの支払い</h3>
